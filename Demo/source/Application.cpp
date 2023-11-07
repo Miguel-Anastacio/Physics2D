@@ -1,7 +1,7 @@
 #include "Application.h"
 
 Application::Application()
-    : m_Window(
+    : m_Window( 
         sf::VideoMode(1200, 780),
         "WINDOW_NAME",
         sf::Style::Default,
@@ -11,13 +11,13 @@ Application::Application()
     //InitGLFW();
     //// Initialize GLEW (must be done after an OpenGL context is created)
     //glewInit();
-
+    m_EnityManager = new EntityManager(1200, 780);
     
 }
 
 Application::~Application()
 {
-  
+    delete m_EnityManager;
    /* glfwDestroyWindow(Window);
     glfwTerminate();*/
 }
@@ -55,9 +55,14 @@ void Application::Run()
 
         glfwSwapBuffers(Window);
     }*/
+   
+    sf::Clock clock;
+
+    m_World.SetObjectsReference(m_EnityManager->GetColliders());
 
     while (m_Window.isOpen())
     {
+        sf::Time deltaTime = clock.restart();
         sf::Event event;
         while (m_Window.pollEvent(event))
         {
@@ -65,9 +70,26 @@ void Application::Run()
             {
                 m_Window.close();
             }
+            else if (event.type == sf::Event::MouseButtonPressed)
+            {
+                auto positionInt = sf::Mouse::getPosition(m_Window);
+                auto positionFloat = m_Window.mapPixelToCoords(positionInt);
+                //auto physicsPos = SfmlPosToSpe(positionFloat);
+                Entity ent(positionFloat);
+                if(m_EnityManager->GetEntities().size() < 10)
+                    m_EnityManager->AddEntity(ent);
+            }
         }
 
+        m_World.Step(deltaTime.asSeconds());
+        m_EnityManager->UpdateEntities(deltaTime.asSeconds());
         m_Window.clear();
+
+        for (const auto& ent : m_EnityManager->GetEntities())
+        {
+            m_Window.draw(ent);
+        }
+
         m_Window.display();
     }
 }

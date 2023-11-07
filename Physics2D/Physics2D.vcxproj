@@ -77,7 +77,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="source\Test.h" />
+    <ClInclude Include="source\Rigidbody.h" />
+    <ClInclude Include="source\Colliders\BoxCollider.h" />
+    <ClInclude Include="source\Colliders\CircleCollider.h" />
+    <ClInclude Include="source\Colliders\Collider.h" />
+    <ClInclude Include="source\ObjectManager.h" />
+    <ClInclude Include="source\Object.h" />
+    <ClInclude Include="source\PhysicsWorld.h" />
+    <ClInclude Include="source\Utilities.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Rigidbody.cpp" />
+    <ClCompile Include="source\Colliders\BoxCollider.cpp" />
+    <ClCompile Include="source\Colliders\CircleCollider.cpp" />
+    <ClCompile Include="source\Colliders\Collider.cpp" />
+    <ClCompile Include="source\ObjectManager.cpp" />
+    <ClCompile Include="source\Object.cpp" />
+    <ClCompile Include="source\PhysicsWorld.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

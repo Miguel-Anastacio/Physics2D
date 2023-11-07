@@ -53,13 +53,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Physics2D\source;$(SolutionDir)\Dependencies\GLFW\include\;$(SolutionDir)Dependencies\glew-2.1.0\include\GL;$(SolutionDir)Dependencies\SFML-2.6.1\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Physics2D\source;$(SolutionDir)Dependencies\SFML-2.6.1\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\Debug-x64\Physics2D; $(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\x64;$(SolutionDir)Dependencies\SFML-2.6.1\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);Physics2D.lib;glfw3.lib;glew32.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\Debug-x64\Physics2D; $(SolutionDir)Dependencies\SFML-2.6.1\lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);Physics2D.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Message>
@@ -94,10 +94,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Entity.cpp" />
+    <ClCompile Include="source\EntityManager.cpp" />
     <ClCompile Include="source\Application.cpp" />
     <ClCompile Include="source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Entity.h" />
+    <ClInclude Include="source\EntityManager.h" />
     <ClInclude Include="source\Application.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
