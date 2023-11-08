@@ -13,11 +13,11 @@ EntityManager::EntityManager(int width, int height)
 
 EntityManager::~EntityManager()
 {
-	for (auto& ent : m_Entities)
+	/*for (auto& ent : m_Entities)
 	{
-		if (ent.collider != nullptr)
-			delete ent.collider;
-	}
+		if (ent.m_Rigidbody != nullptr)
+			delete ent.m_Rigidbody;
+	}*/
 }
 
 std::vector<Entity> EntityManager::GetEntities()
@@ -27,8 +27,8 @@ std::vector<Entity> EntityManager::GetEntities()
 
 void EntityManager::AddEntity(const Entity& entity)
 {
-	m_Entities.push_back(entity);	
-	m_Colliders.push_back(entity.collider);
+	m_Entities.emplace_back(entity);	
+	m_Bodies.push_back(entity.m_Rigidbody);
 }
 
 void EntityManager::RemoveEntity(const Entity& entity)
@@ -41,9 +41,9 @@ void EntityManager::RemoveEntity(const Entity& entity)
 }
 void EntityManager::CleanupEntities()
 {
-	for (std::vector<Entity>::iterator it = m_Entities.begin(); it != m_Entities.end();)
+	/*for (std::vector<Entity>::iterator it = m_Entities.begin(); it != m_Entities.end();)
 	{
-		if (it->collider->GetPosition().Y > m_HEIGHT || it->collider->GetPosition().X > m_WIDTH)
+		if (it->m_Rigidbody->GetPosition().Y > m_HEIGHT || it->m_Rigidbody->GetPosition().X > m_WIDTH)
 		{
 			it = m_Entities.erase(it);
 		}
@@ -52,6 +52,18 @@ void EntityManager::CleanupEntities()
 			it++;
 		}
 	}
+	for (std::vector<std::shared_ptr<Physics2D::CollisionBody>>::iterator it = m_Bodies.begin(); it != m_Bodies.end();)
+	{
+
+		if (it->m_Rigidbody->GetPosition().Y > m_HEIGHT || it->GetPosition().X > m_WIDTH)
+		{
+			it = m_Entities.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}*/
 }
 
 void EntityManager::UpdateEntities(float dt)
@@ -68,7 +80,7 @@ void EntityManager::RenderEntities()
 	
 }
 
-std::vector<Physics2D::Object*>* EntityManager::GetColliders()
+std::vector<std::shared_ptr<Physics2D::CollisionBody>>* EntityManager::GetBodies()
 {
-	return &m_Colliders;
+	return &m_Bodies;
 }

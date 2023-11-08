@@ -77,22 +77,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="source\Rigidbody.h" />
-    <ClInclude Include="source\Colliders\BoxCollider.h" />
-    <ClInclude Include="source\Colliders\CircleCollider.h" />
-    <ClInclude Include="source\Colliders\Collider.h" />
-    <ClInclude Include="source\ObjectManager.h" />
-    <ClInclude Include="source\Object.h" />
+    <ClInclude Include="source\Collision\Colliders\AabbCollider.h" />
+    <ClInclude Include="source\Collision\CollisionBody.h" />
+    <ClInclude Include="source\Collision\ManifoldGeneration.h" />
+    <ClInclude Include="source\Collision\Manifold.h" />
+    <ClInclude Include="source\Dynamics\Rigidbody.h" />
+    <ClInclude Include="source\Collision\Colliders\BoxCollider.h" />
+    <ClInclude Include="source\Collision\Colliders\CircleCollider.h" />
+    <ClInclude Include="source\Collision\Colliders\Collider.h" />
     <ClInclude Include="source\PhysicsWorld.h" />
-    <ClInclude Include="source\Utilities.h" />
+    <ClInclude Include="source\Transform.hpp" />
+    <ClInclude Include="source\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Rigidbody.cpp" />
-    <ClCompile Include="source\Colliders\BoxCollider.cpp" />
-    <ClCompile Include="source\Colliders\CircleCollider.cpp" />
-    <ClCompile Include="source\Colliders\Collider.cpp" />
-    <ClCompile Include="source\ObjectManager.cpp" />
-    <ClCompile Include="source\Object.cpp" />
+    <ClCompile Include="source\Collision\Colliders\AabbCollider.cpp" />
+    <ClCompile Include="source\Collision\CollisionBody.cpp" />
+    <ClCompile Include="source\Collision\ManifoldGeneration.cpp" />
+    <ClCompile Include="source\Collision\Manifold.cpp" />
+    <ClCompile Include="source\Dynamics\Rigidbody.cpp" />
+    <ClCompile Include="source\Collision\Colliders\BoxCollider.cpp" />
+    <ClCompile Include="source\Collision\Colliders\CircleCollider.cpp" />
+    <ClCompile Include="source\Collision\Colliders\Collider.cpp" />
     <ClCompile Include="source\PhysicsWorld.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -58,7 +58,7 @@ void Application::Run()
    
     sf::Clock clock;
 
-    m_World.SetObjectsReference(m_EnityManager->GetColliders());
+    m_World.SetCollisionBodiesReference(m_EnityManager->GetBodies());
 
     while (m_Window.isOpen())
     {
@@ -75,7 +75,7 @@ void Application::Run()
                 auto positionInt = sf::Mouse::getPosition(m_Window);
                 auto positionFloat = m_Window.mapPixelToCoords(positionInt);
                 //auto physicsPos = SfmlPosToSpe(positionFloat);
-                Entity ent(positionFloat);
+                Entity ent(positionFloat, Physics2D::Vector2(0, 300 * m_EnityManager->GetEntities().size()));
                 if(m_EnityManager->GetEntities().size() < 10)
                     m_EnityManager->AddEntity(ent);
             }

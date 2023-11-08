@@ -15,28 +15,37 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Utilities.h">
+    <ClInclude Include="source\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\PhysicsWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Object.h">
+    <ClInclude Include="source\Collision\Colliders\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\ObjectManager.h">
+    <ClInclude Include="source\Collision\Colliders\CircleCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Colliders\Collider.h">
+    <ClInclude Include="source\Collision\Colliders\BoxCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Colliders\CircleCollider.h">
+    <ClInclude Include="source\Dynamics\Rigidbody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Colliders\BoxCollider.h">
+    <ClInclude Include="source\Collision\Manifold.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Rigidbody.h">
+    <ClInclude Include="source\Collision\ManifoldGeneration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Collision\CollisionBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Collision\Colliders\AabbCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,22 +53,28 @@
     <ClCompile Include="source\PhysicsWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Object.cpp">
+    <ClCompile Include="source\Collision\Colliders\Collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\ObjectManager.cpp">
+    <ClCompile Include="source\Collision\Colliders\CircleCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Colliders\Collider.cpp">
+    <ClCompile Include="source\Collision\Colliders\BoxCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Colliders\CircleCollider.cpp">
+    <ClCompile Include="source\Dynamics\Rigidbody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Colliders\BoxCollider.cpp">
+    <ClCompile Include="source\Collision\Manifold.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Rigidbody.cpp">
+    <ClCompile Include="source\Collision\ManifoldGeneration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Collision\CollisionBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Collision\Colliders\AabbCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

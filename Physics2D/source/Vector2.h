@@ -1,7 +1,7 @@
 #pragma once
-
-namespace Physics2D {
-
+#include <cmath>
+namespace Physics2D 
+{
 	const int WIDTH = 1500;
 	const int HEIGHT = 1100;
 	struct Vector3
@@ -34,7 +34,10 @@ namespace Physics2D {
 		{
 			return Vector2(this->X + other.X, this->Y + other.Y);
 		}
-
+		Vector2 operator-(const Vector2& other) const
+		{
+			return Vector2(this->X - other.X, this->Y - other.Y);
+		}
 		Vector2 operator*(const float& scalar) const
 		{
 			return Vector2(this->X * scalar, this->Y * scalar);
@@ -43,21 +46,27 @@ namespace Physics2D {
 		{
 			return Vector2(this->X / scalar, this->Y / scalar);
 		}
-	};
 
-	struct CollisionPoints
-	{
-		Vector2 A;
-		Vector2 B;
-		Vector2 Normal;
-		float Depth;
-		bool HasCollision;
-	};
+		float Magnitude() const
+		{
+			return sqrtf(X*X + Y*Y);
+		}
+		float MagnitudeSqr() const
+		{
+			return (X * X) + (Y*Y);
+		}
 
-	struct Transform
-	{
-		Vector2 Position;
-		Vector2 Scale;
-		
+		Vector2 Normalized() const
+		{
+			float mag = Magnitude();
+			return *this / mag;
+		}
+
+		float Dot(const Vector2& other)
+		{
+			return X * other.X + Y * other.Y;
+		}
+
 	};
+	
 }
