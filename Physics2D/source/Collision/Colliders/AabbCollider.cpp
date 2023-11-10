@@ -5,16 +5,16 @@ namespace Physics2D
 	AabbCollider::AabbCollider(float halfWidth, float halfHeight)
 		: m_HalfWidth(halfWidth), m_HalfHeight(halfHeight)
 	{
-
+		m_Center = Vector2(halfWidth, halfHeight);
 	}
 
 	Manifold AabbCollider::TestCollision(const Transform& transform, const Collider* collider, const Transform& colliderTransform) const
 	{
-		return TestCollision(transform, collider, colliderTransform);
+		return collider->TestCollision(colliderTransform, this, transform);
 	}
 	Manifold AabbCollider::TestCollision(const Transform& transform, const CircleCollider* collider, const Transform& colliderTransform) const
 	{
-		return detection::FindCircleAabbManifold(transform, collider, colliderTransform, this);
+		return detection::FindCircleAabbManifold(colliderTransform, collider, transform, this);
 	}
 	Manifold AabbCollider::TestCollision(const Transform& transform, const BoxCollider* collider, const Transform& colliderTransform) const
 	{

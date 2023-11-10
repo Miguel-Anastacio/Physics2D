@@ -6,11 +6,11 @@ namespace Physics2D
 	CircleCollider::CircleCollider(float radius)
 		: m_Radius(radius)
 	{
-
+		m_Center = Vector2(radius, radius);
 	}
 	Manifold CircleCollider::TestCollision(const Transform& transform, const Collider* collider, const Transform& colliderTransform) const
 	{
-		return TestCollision(transform, this, colliderTransform);
+		return collider->TestCollision(transform, this, colliderTransform);
 	}
 
 	Manifold CircleCollider::TestCollision(const Transform& transform, const CircleCollider* collider, const Transform& colliderTransform) const

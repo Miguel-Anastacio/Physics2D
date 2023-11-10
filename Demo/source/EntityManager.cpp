@@ -1,5 +1,5 @@
 #include "EntityManager.h"
-
+#include "Circle.h"
 EntityManager::EntityManager()
 {
 
@@ -27,8 +27,10 @@ std::vector<Entity> EntityManager::GetEntities()
 
 void EntityManager::AddEntity(const Entity& entity)
 {
-	m_Entities.emplace_back(entity);	
-	m_Bodies.push_back(entity.m_Rigidbody);
+	entity.m_Rigidbody->SetID(count);
+	m_Entities.emplace_back(entity);
+	count++;
+	//m_Bodies.emplace_back(entity.m_Rigidbody);
 }
 
 void EntityManager::RemoveEntity(const Entity& entity)
@@ -39,12 +41,14 @@ void EntityManager::RemoveEntity(const Entity& entity)
 	m_Entities.erase(it);
 }*/
 }
-void EntityManager::CleanupEntities()
+std::vector<uint64_t> EntityManager::CleanupEntities()
 {
-	/*for (std::vector<Entity>::iterator it = m_Entities.begin(); it != m_Entities.end();)
+	std::vector<uint64_t> ids;
+	for (std::vector<Entity>::iterator it = m_Entities.begin(); it != m_Entities.end();)
 	{
 		if (it->m_Rigidbody->GetPosition().Y > m_HEIGHT || it->m_Rigidbody->GetPosition().X > m_WIDTH)
 		{
+			ids.push_back(it->m_Rigidbody->GetID());
 			it = m_Entities.erase(it);
 		}
 		else
@@ -52,18 +56,8 @@ void EntityManager::CleanupEntities()
 			it++;
 		}
 	}
-	for (std::vector<std::shared_ptr<Physics2D::CollisionBody>>::iterator it = m_Bodies.begin(); it != m_Bodies.end();)
-	{
+	return ids;
 
-		if (it->m_Rigidbody->GetPosition().Y > m_HEIGHT || it->GetPosition().X > m_WIDTH)
-		{
-			it = m_Entities.erase(it);
-		}
-		else
-		{
-			it++;
-		}
-	}*/
 }
 
 void EntityManager::UpdateEntities(float dt)
@@ -72,12 +66,19 @@ void EntityManager::UpdateEntities(float dt)
 	{
 		ent.Update(dt);
 	}
-	CleanupEntities();
+	//CleanupEntities();
 }
 
 void EntityManager::RenderEntities()
 {
 	
+}
+
+void EntityManager::AddCircle(const sf::Vector2f& pos, float radius)
+{
+	//Circle circle = Circle(pos, radius);
+	//m_Entities.emplace_back(circle);
+	//m_Bodies.emplace_back(circle.GetRigidbody());
 }
 
 std::vector<std::shared_ptr<Physics2D::CollisionBody>>* EntityManager::GetBodies()

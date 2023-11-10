@@ -26,14 +26,14 @@ namespace Physics2D
 		return m_LinearVelocity;
 	}
 
-	void Rigidbody::SetMass(const float& mass)
+	void Rigidbody::SetInvMass(const float& mass)
 	{
-		m_Mass = mass;
+		m_InvMass = mass;
 	}
 
 	float Rigidbody::GetMass()
 	{
-		return m_Mass;
+		return m_InvMass;
 	}
 
 	void Rigidbody::ApplyForce()

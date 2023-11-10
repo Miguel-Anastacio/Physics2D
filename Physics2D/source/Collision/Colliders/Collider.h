@@ -3,6 +3,7 @@
 #include "../../Transform.hpp"
 namespace Physics2D
 {
+
 	/*enum class TypeOfCollider
 	{
 		Trigger,

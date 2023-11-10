@@ -10,7 +10,7 @@ namespace Physics2D
 		Vector2 GetForce();
 		void SetVelocity(const Vector2& velocity);
 		Vector2 GetVelocity();
-		void SetMass(const float& mass);
+		void SetInvMass(const float& mass);
 		float GetMass();
 
 		void ApplyForce();
@@ -25,7 +25,7 @@ namespace Physics2D
 		// in 2D torque is described as a float since it only has a "z" component
 		float m_Torque;
 
-		float m_Mass;
+		float m_InvMass;
 	};
 }
 

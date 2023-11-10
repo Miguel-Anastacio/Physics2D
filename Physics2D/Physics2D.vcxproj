@@ -77,8 +77,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="source\Dynamics\Solver.h" />
     <ClInclude Include="source\Collision\Colliders\AabbCollider.h" />
     <ClInclude Include="source\Collision\CollisionBody.h" />
+    <ClInclude Include="source\Collision\CollisionStruct.hpp" />
     <ClInclude Include="source\Collision\ManifoldGeneration.h" />
     <ClInclude Include="source\Collision\Manifold.h" />
     <ClInclude Include="source\Dynamics\Rigidbody.h" />
@@ -90,6 +92,7 @@
     <ClInclude Include="source\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Dynamics\Solver.cpp" />
     <ClCompile Include="source\Collision\Colliders\AabbCollider.cpp" />
     <ClCompile Include="source\Collision\CollisionBody.cpp" />
     <ClCompile Include="source\Collision\ManifoldGeneration.cpp" />

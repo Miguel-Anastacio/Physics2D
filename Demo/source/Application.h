@@ -12,7 +12,7 @@ public:
 	~Application();
 	//bool InitGLFW();
 	void Run();
-
+	
 	
 private:
 

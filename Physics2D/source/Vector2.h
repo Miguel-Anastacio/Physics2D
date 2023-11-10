@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <iostream>
 namespace Physics2D 
 {
 	const int WIDTH = 1500;
@@ -46,6 +47,13 @@ namespace Physics2D
 		{
 			return Vector2(this->X / scalar, this->Y / scalar);
 		}
+		bool operator==(const Vector2& other) const
+		{
+			if (X == other.X && Y == other.Y)
+				return true;
+			
+			return false;
+		}
 
 		float Magnitude() const
 		{
@@ -65,6 +73,11 @@ namespace Physics2D
 		float Dot(const Vector2& other)
 		{
 			return X * other.X + Y * other.Y;
+		}
+
+		void Print() const
+		{
+			std::cout << "(" << X << "," << Y << ")";
 		}
 
 	};

@@ -2,6 +2,7 @@
 #include "Colliders/BoxCollider.h"
 #include "Colliders/CircleCollider.h"
 #include "Colliders/AabbCollider.h"
+#include <algorithm>
 namespace Physics2D
 {
 	namespace detection
@@ -42,8 +43,7 @@ namespace Physics2D
 		}
 		Manifold FindCircleAabbManifold(const Transform& circeTransform, const CircleCollider* circle, const Transform& boxTransform, const AabbCollider* box)
 		{
-			// to do
-			return Manifold();
+			return FindAabbCircleManifold(boxTransform, box, circeTransform, circle);
 		}
 		Manifold FindAabbAabbManifold(const Transform& transformA, const AabbCollider* boxA, const Transform& transformB, const AabbCollider* boxB)
 		{
@@ -73,13 +73,13 @@ namespace Physics2D
 			{
 				if (AtoB.Y > 0)
 				{
-					normal = Vector2(0.0f, -1.0f);
+					normal = Vector2(0.0f, 1.0f);
 					aFurthestPoint.Y = centreA.Y + halfSizeA.Y;
 					bFurthestPoint.Y = centreB.Y - halfSizeB.Y;
 				}
 				else
 				{
-					normal = Vector2(0, 1.0f);
+					normal = Vector2(0, -1.0f);
 					aFurthestPoint.Y = centreA.Y - halfSizeA.Y;
 					bFurthestPoint.Y = centreB.Y + halfSizeB.Y;
 				}
@@ -161,6 +161,36 @@ namespace Physics2D
 		{
 			// to to
 			return Manifold();
+		}
+		Manifold FindAabbCircleManifold(const Transform& aabbTransform, const AabbCollider* aabb, const Transform& circleTransform, const CircleCollider* circle)
+		{
+			Vector2 centreCircle = circleTransform.Position + circle->m_Center;
+			float radius = circleTransform.Scale.X * circle->m_Radius;
+			Vector2 centreBox = aabbTransform.Position + aabb->m_Center;
+			Vector2 halfSizeBox = Vector2(aabb->m_HalfWidth * aabbTransform.Scale.X, aabb->m_HalfHeight * aabbTransform.Scale.Y);
+
+			Vector2 boxToCircle = centreCircle - centreBox;
+
+			// get circle's closest point on the aabb
+			Vector2 ClosestPointOnBox;
+			ClosestPointOnBox.X = std::clamp(boxToCircle.X, -halfSizeBox.X, halfSizeBox.X);
+			ClosestPointOnBox.Y = std::clamp(boxToCircle.Y, -halfSizeBox.Y, halfSizeBox.Y);
+
+			/// determine how far is the circle from the point
+			// if the distance is less than the radius then this point is inside the circle and the objects are colliding
+			Vector2 localPoint = boxToCircle - ClosestPointOnBox;
+			// use squared magnitude and radius to be more efficient
+			if (localPoint.Magnitude() < radius)
+			{
+				Vector2 normal = localPoint.Normalized();
+				Vector2 a = ClosestPointOnBox + centreBox;
+				Vector2 b = centreCircle + normal * -1 * radius;
+				float depth = radius - localPoint.Magnitude();
+				return Manifold(a, b, normal, depth);
+			}
+			
+			return Manifold();
+			
 		}
 		Manifold FindBoxBoxManifold(const Transform& transformA, const BoxCollider* boxA, const Transform& transformB, const BoxCollider* boxB)
 		{

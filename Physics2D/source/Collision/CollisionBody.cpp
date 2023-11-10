@@ -7,13 +7,23 @@ namespace Physics2D
 		m_Transform.Position = Vector2(0, 0);
 		m_Transform.Rotation = 0;
 	}
-	Collider* CollisionBody::GetCollider() const
+
+	CollisionBody::CollisionBody(int id)
 	{
-		return m_Collider;
+		m_Transform.Scale = Vector2(1, 1);
+		m_Transform.Position = Vector2(0, 0);
+		m_Transform.Rotation = 0;
+		ID = id;
 	}
-	void CollisionBody::SetCollider(Collider* collider)
+	
+	std::shared_ptr<Collider> CollisionBody::GetColliderShared() const
 	{
-		m_Collider = collider;
+		return m_ColliderShared;
+	}
+	
+	void CollisionBody::SetColliderShared(std::shared_ptr<Collider> collider)
+	{
+		m_ColliderShared = collider;
 	}
 	Transform CollisionBody::GetTransform() const
 	{
@@ -30,5 +40,13 @@ namespace Physics2D
 	Vector2 CollisionBody::GetPosition() const
 	{
 		return m_Transform.Position;
+	}
+	void CollisionBody::SetID(int id)
+	{
+		ID = id;
+	}
+	uint64_t CollisionBody::GetID()
+	{
+		return ID;
 	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Dynamics/RigidBody.h"
+#include"Dynamics/Solver.h"
 #include <memory>
 #include <vector>
 namespace Physics2D
@@ -8,18 +9,23 @@ namespace Physics2D
 	{
 	public:
 		PhysicsWorld();
-		void Step(float dt);
 
-		void SetCollisionBodiesReference(std::vector<std::shared_ptr<CollisionBody>>* bodies);
+		//void AddCollisionBody();
 		
 
+		void CleanupCollisionBodies(const std::vector<uint64_t>& ids);
+		void Step(float dt);
+
+		std::vector<std::shared_ptr<CollisionBody>> m_CollisionBodies;
 	private:
 
-		void ApplyGravity(Rigidbody* object, const float&dt);
-		void DetectCollisions();
+		std::vector<Solver> m_Solvers;
+
+		void ApplyGravity(Rigidbody* object, const float& dt);
+		void ResolveCollisions(const float& dt);
 
 		//ObjectManager m_ObjectManager;
-		std::vector<std::shared_ptr<CollisionBody>>* m_CollisionBodies = NULL;
+
 		Vector2 m_Gravity = Vector2(0, 98.f);
 
 

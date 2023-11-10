@@ -18,9 +18,8 @@ namespace Physics2D
 			const Transform& circleTransform, const CircleCollider* circle, const Transform& boxTransform, const BoxCollider* box) ;
 
 		Manifold FindCircleAabbManifold(
-			const Transform& circeTransform, const CircleCollider* circle,
+			const Transform& circleTransform, const CircleCollider* circle,
 			const Transform& boxTransform, const AabbCollider* box) ;
-
 
 		Manifold FindAabbAabbManifold(
 			const Transform& transformA, const AabbCollider* boxA, const Transform& transformB, const AabbCollider* boxB) ;
@@ -28,6 +27,10 @@ namespace Physics2D
 		Manifold FindAabbBoxManifold(
 			const Transform& aabbTransform, const AabbCollider* aabb,
 			const Transform& boxTransform, const BoxCollider* box) ;
+
+		Manifold FindAabbCircleManifold(
+			const Transform& aabbTransform, const AabbCollider* aabb,
+			const Transform& circleTransform, const CircleCollider* circle);
 
 		Manifold FindBoxBoxManifold(
 			const Transform& transformA, const BoxCollider* boxA,

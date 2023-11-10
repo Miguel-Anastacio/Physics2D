@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "Circle.h"
+#include "Aabb.h"
 
 Application::Application()
     : m_Window( 
@@ -58,7 +60,7 @@ void Application::Run()
    
     sf::Clock clock;
 
-    m_World.SetCollisionBodiesReference(m_EnityManager->GetBodies());
+    //m_World.SetCollisionBodiesReference(m_EnityManager->GetBodies());
 
     while (m_Window.isOpen())
     {
@@ -75,14 +77,36 @@ void Application::Run()
                 auto positionInt = sf::Mouse::getPosition(m_Window);
                 auto positionFloat = m_Window.mapPixelToCoords(positionInt);
                 //auto physicsPos = SfmlPosToSpe(positionFloat);
-                Entity ent(positionFloat, Physics2D::Vector2(0, 300 * m_EnityManager->GetEntities().size()));
-                if(m_EnityManager->GetEntities().size() < 10)
-                    m_EnityManager->AddEntity(ent);
+                //rcle ent(positionFloat, Physics2D::Vector2(0, 300 * m_EnityManager->GetEntities().size()));
+                //Circle circle(positionFloat, 50.0f);
+                if (m_EnityManager->GetEntities().size() < 10)
+                {
+                    if (event.mouseButton.button == sf::Mouse::Left)
+                    {
+                        /* m_EnityManager->AddEntity(Circle(positionFloat, 50.0f));
+                         m_World.m_CollisionBodiesVector.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());*/
+                        m_EnityManager->AddEntity(Circle(sf::Vector2f(500, 150),  50.0f));
+                        m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
+                    }
+                    if (event.mouseButton.button == sf::Mouse::Right)
+                    {
+                        /* m_EnityManager->AddEntity(Circle(positionFloat, 50.0f));
+                         m_World.m_CollisionBodiesVector.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());*/
+                        m_EnityManager->AddEntity(Aabb(sf::Vector2f(500, 400), Physics2D::Vector2(50, 30)));
+                        m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
+                    }
+                }
+                    //m_EnityManager
             }
         }
 
         m_World.Step(deltaTime.asSeconds());
         m_EnityManager->UpdateEntities(deltaTime.asSeconds());
+
+        // this cleanup should be more efficient
+        // look into how to improve
+        m_World.CleanupCollisionBodies(m_EnityManager->CleanupEntities());
+
         m_Window.clear();
 
         for (const auto& ent : m_EnityManager->GetEntities())
