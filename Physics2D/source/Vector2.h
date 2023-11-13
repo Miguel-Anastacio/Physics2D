@@ -43,6 +43,7 @@ namespace Physics2D
 		{
 			return Vector2(this->X * scalar, this->Y * scalar);
 		}
+		
 		Vector2 operator/(const float& scalar) const
 		{
 			return Vector2(this->X / scalar, this->Y / scalar);
@@ -53,6 +54,11 @@ namespace Physics2D
 				return true;
 			
 			return false;
+		}
+		void operator+=(const Vector2& other) 
+		{
+			X += other.X;
+			Y += other.Y;
 		}
 
 		float Magnitude() const
@@ -67,7 +73,16 @@ namespace Physics2D
 		Vector2 Normalized() const
 		{
 			float mag = Magnitude();
+			if (mag == 0)
+				mag = 1.0f;
 			return *this / mag;
+		}
+		void Normalize() 
+		{
+			float mag = Magnitude();
+			if (mag == 0)
+				mag = 1.0f;
+			*this = *this / mag;
 		}
 
 		float Dot(const Vector2& other)
@@ -81,5 +96,10 @@ namespace Physics2D
 		}
 
 	};
+
+	/*Vector2 operator*(const float& scalar, const Vector2& vector)
+	{
+		return Vector2(vector.X / scalar, vector.Y / scalar);
+	}*/
 	
 }

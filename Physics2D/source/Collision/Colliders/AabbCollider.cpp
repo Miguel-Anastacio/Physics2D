@@ -14,7 +14,7 @@ namespace Physics2D
 	}
 	Manifold AabbCollider::TestCollision(const Transform& transform, const CircleCollider* collider, const Transform& colliderTransform) const
 	{
-		return detection::FindCircleAabbManifold(colliderTransform, collider, transform, this);
+		return detection::FindAabbCircleManifold(transform, this, colliderTransform, collider);
 	}
 	Manifold AabbCollider::TestCollision(const Transform& transform, const BoxCollider* collider, const Transform& colliderTransform) const
 	{

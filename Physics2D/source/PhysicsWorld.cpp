@@ -1,34 +1,32 @@
 #include "PhysicsWorld.h"
 #include <iostream>
+#include "Dynamics/Solvers/ImpulseSolver.h"
+#include "Dynamics/Solvers/SmoothPositionSolver.h"
+#include "Collision/QuadTree.h"
 namespace Physics2D
 {
 	PhysicsWorld::PhysicsWorld()
 	{
+		m_ImpulseSolver = new ImpulseSolver();
+		m_Solvers.push_back(m_ImpulseSolver);
+		m_SmoothPositionSolver = new SmoothPositionSolver();
+		m_Solvers.push_back(m_SmoothPositionSolver);
+	}
 
+	PhysicsWorld::~PhysicsWorld()
+	{
+		if (m_ImpulseSolver != nullptr)
+			delete m_ImpulseSolver;
+		if (m_SmoothPositionSolver != nullptr)
+			delete m_SmoothPositionSolver;
 	}
 
 	void PhysicsWorld::Step(float dt)
 	{
-		for (auto& body : m_CollisionBodies)
-		{
-			/*	obj->SetForce(obj->GetForce() + m_Gravity * obj->GetMass());
-
-				obj->SetVelocity(obj->GetVelocity() + obj->GetForce() / obj->GetMass() * dt);
-				obj->SetPosition(obj->GetPosition() + obj->GetVelocity() * dt);
-
-				obj->SetForce(Vector2(0, 0));*/
-
-			Rigidbody* rb = static_cast<Rigidbody*>(body.get());
-			if (rb != NULL)
-			{
-				ApplyGravity(rb, dt);
-				rb->SetPosition(rb->GetPosition() + rb->GetVelocity() * dt);
-			}
-		}
+		ApplyGravity();
 		ResolveCollisions(dt);
+		MoveBodies(dt);
 	}
-
-	
 
 	void PhysicsWorld::CleanupCollisionBodies(const std::vector<uint64_t>& ids)
 	{
@@ -49,21 +47,69 @@ namespace Physics2D
 		}
 	}
 
-	void PhysicsWorld::ApplyGravity(Rigidbody* rb, const float& dt)
+	void PhysicsWorld::ApplyGravity()
 	{
-		rb->SetForce(rb->GetForce() + m_Gravity / rb->GetMass());
-		rb->SetVelocity(rb->GetVelocity() + rb->GetForce() * rb->GetMass() * dt);
+		for (auto& body : m_CollisionBodies)
+		{
+			Rigidbody* rb = static_cast<Rigidbody*>(body.get());
+			if (rb != NULL && rb->IsKinematic())
+			{
+				rb->AddForce(m_Gravity * rb->GetGravityScale() * rb->GetMass());
+			}
+		}
+	}
 
-		rb->SetForce(Vector2(0, 0));
+	void PhysicsWorld::BroadPhase()
+	{
+		m_BroadphaseCollisions.clear();
+		QuadTree<CollisionBody*> tree(Vector2(512, 512), 2, 5);
+		for (auto& body : m_CollisionBodies)
+		{
+			Aabb boundingBox;
+			if (!body->GetAabb(boundingBox))
+				continue;
+
+			tree.Insert(body.get(), boundingBox.Centre, boundingBox.HalfSize);
+		}
+
+		tree.OperateOnContents([&](std::list<QuadTreeEntry<CollisionBody*>>& data) 
+			{
+				CollisionPair pair;
+				for (auto i = data.begin(); i != data.end();i++)
+				{
+					for (auto j = std::next(i); j != data.end(); j++)
+					{
+						pair.bodyA = std::min(i->Object, j->Object);
+						pair.bodyB = std::max(i->Object, j->Object);
+						m_BroadphaseCollisions.insert(pair);
+					}
+				}
+			})
+
+		if (m_CollisionBodies.size() > 20)
+		{
+			int a = 0;
+		}
 	}
 
 	void PhysicsWorld::ResolveCollisions(const float& dt)
 	{
 		std::vector<Collision> collisions;
 		Manifold manifold;
-		for (int i = 0; i < m_CollisionBodies.size(); i++)
+
+
+		// Broad Phase
+		BroadPhase();
+
+
+		int maxBody = m_CollisionBodies.size();
+		if (m_CollisionBodies.size() > 10000)
 		{
-			for (int j = 0; j < m_CollisionBodies.size(); j++)
+			maxBody = 10000;
+		}
+		for (int i = 0; i < maxBody; i++)
+		{
+			for (int j = i+1; j < maxBody; j++)
 			{
 	
 				if (i == j)
@@ -75,17 +121,34 @@ namespace Physics2D
 				if (manifold.HasCollision)
 				{
 					collisions.emplace_back(manifold, m_CollisionBodies[i].get(), m_CollisionBodies[j].get());
-					collisions.back().Print();
-					int a = 0;
+					//collisions.back().Print();
 				}
 			}
 		}
 
 		// resolve collisions
-		for (Solver& solver : m_Solvers)
+		for (Solver* solver : m_Solvers)
 		{
-			solver.Solve(collisions, dt);
+			solver->Solve(collisions, dt);
 		}
 		//return collisions;
+	}
+
+	void PhysicsWorld::MoveBodies(const float& dt) const
+	{
+		for (auto& body : m_CollisionBodies)
+		{
+			Rigidbody* rb = dynamic_cast<Rigidbody*>(body.get());
+			if (rb != NULL && rb->IsKinematic())
+			{
+				rb->SetVelocity(rb->GetVelocity() + rb->GetForce() * rb->GetInvMass() * dt);
+
+				rb->SetPosition(rb->GetPosition() + rb->GetVelocity() * dt);
+
+				rb->SetForce(Vector2(0, 0));
+			}
+
+
+		}
 	}
 }

@@ -10,7 +10,7 @@ namespace Physics2D
 	}
 	Manifold CircleCollider::TestCollision(const Transform& transform, const Collider* collider, const Transform& colliderTransform) const
 	{
-		return collider->TestCollision(transform, this, colliderTransform);
+		return collider->TestCollision(colliderTransform, this, transform);
 	}
 
 	Manifold CircleCollider::TestCollision(const Transform& transform, const CircleCollider* collider, const Transform& colliderTransform) const

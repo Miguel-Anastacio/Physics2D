@@ -12,7 +12,7 @@ public:
 	~Application();
 	//bool InitGLFW();
 	void Run();
-	
+	void RenderDebugInfo(const float& dt);
 	
 private:
 
@@ -22,6 +22,11 @@ private:
 	Physics2D::PhysicsWorld m_World;
 	EntityManager* m_EnityManager;
 
+	sf::Font m_Font;
+	sf::Text m_Fps;
+	sf::Text m_FpsCount;
+	sf::Text m_Objects;
+	sf::Text m_ObjectsCount;
 
 };
 

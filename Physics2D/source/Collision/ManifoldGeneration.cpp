@@ -31,9 +31,11 @@ namespace Physics2D
 			Vector2 bPos = centreB + BtoA.Normalized() * radiusB;
 
 			Vector2 collisionPointsDistance = bPos - aPos;
-			Vector2 norm = collisionPointsDistance.Normalized();
+			if (collisionPointsDistance.Magnitude() == 0)
+				int a = 0;
+			Vector2 norm = collisionPointsDistance.Normalized() * -1;
 			float depth = collisionPointsDistance.Magnitude();
-			return Manifold(aPos, bPos, collisionPointsDistance.Normalized(), collisionPointsDistance.Magnitude());
+			return Manifold(aPos, bPos, norm, collisionPointsDistance.Magnitude());
 
 		}
 		Manifold FindCircleBoxManifold(const Transform& circleTransform, const CircleCollider* circle, const Transform& boxTransform, const BoxCollider* box)
@@ -43,7 +45,7 @@ namespace Physics2D
 		}
 		Manifold FindCircleAabbManifold(const Transform& circeTransform, const CircleCollider* circle, const Transform& boxTransform, const AabbCollider* box)
 		{
-			return FindAabbCircleManifold(boxTransform, box, circeTransform, circle);
+			return FindAabbCircleManifold(boxTransform, box, circeTransform, circle).Swaped();
 		}
 		Manifold FindAabbAabbManifold(const Transform& transformA, const AabbCollider* boxA, const Transform& transformB, const AabbCollider* boxB)
 		{
@@ -57,12 +59,12 @@ namespace Physics2D
 			Vector2 AtoB = BtoA * -1;
 
 			// test overlap on x axis
-			const float xOverlap = halfSizeA.X + halfSizeB.X - fabs(BtoA.X);
+			const float xOverlap = halfSizeA.X + halfSizeB.X - fabs(AtoB.X);
 
 			if (xOverlap <= 0.0f)
 				return Manifold();
 
-			const float yOverlap = halfSizeA.Y + halfSizeB.Y - fabs(BtoA.Y);
+			const float yOverlap = halfSizeA.Y + halfSizeB.Y - fabs(AtoB.Y);
 			if (yOverlap <= 0.0f)
 				return Manifold();
 
@@ -96,6 +98,7 @@ namespace Physics2D
 				}
 
 
+
 				return Manifold(aFurthestPoint, bFurthestPoint, normal, yOverlap);
 			}
 			else
@@ -108,25 +111,27 @@ namespace Physics2D
 				else
 				{
 					aFurthestPoint.Y = centreA.Y - halfSizeA.Y + yOverlap / 2.0f;
-					aFurthestPoint.Y = centreB.Y + halfSizeB.Y - yOverlap / 2.0f;
+					bFurthestPoint.Y = centreB.Y + halfSizeB.Y - yOverlap / 2.0f;
 
 				}
 
 				if (AtoB.X > 0)
 				{
-					normal = Vector2(-1.0f, 0.0f);
-					aFurthestPoint.X = centreA.Y + halfSizeA.Y;
-					bFurthestPoint.X = centreB.Y - halfSizeB.Y;
+					normal = Vector2(1.0f, 0.0f);
+					aFurthestPoint.X = centreA.X + halfSizeA.X;
+					bFurthestPoint.X = centreB.X - halfSizeB.X;
 				
 				}
 				else
 				{
-					normal = Vector2(1.0f, 0.0f);
+					normal = Vector2(-1.0f, 0.0f);
 					aFurthestPoint.X = centreA.X - halfSizeA.X;
 					bFurthestPoint.X = centreB.X + halfSizeB.X;
 		
 				}
-
+				Vector2 furthestPointDirection = bFurthestPoint - aFurthestPoint;  
+				furthestPointDirection.Y = 0;
+				//normal = furthestPointDirection.Normalized();
 
 				return Manifold(aFurthestPoint, bFurthestPoint, normal, xOverlap);
 			}
@@ -176,20 +181,57 @@ namespace Physics2D
 			ClosestPointOnBox.X = std::clamp(boxToCircle.X, -halfSizeBox.X, halfSizeBox.X);
 			ClosestPointOnBox.Y = std::clamp(boxToCircle.Y, -halfSizeBox.Y, halfSizeBox.Y);
 
+			bool inside = false;
+			// Circle is inside the AABB, so we need to clamp the circle's center 
+			// to the closest edge 
+			if (boxToCircle == ClosestPointOnBox)
+			{
+				inside = true;
+				// Find closest axis 
+				if (abs(boxToCircle.X) > abs(boxToCircle.Y))
+				{
+					// Clamp to closest extent 
+					if (ClosestPointOnBox.X > 0)
+						ClosestPointOnBox.X = halfSizeBox.X;
+					else
+						ClosestPointOnBox.X = -halfSizeBox.X;
+				}
+				// y axis is shorter 
+				else
+				{
+					// Clamp to closest extent 
+					if (ClosestPointOnBox.Y > 0)
+						ClosestPointOnBox.Y = halfSizeBox.Y;
+					else
+						ClosestPointOnBox.Y = -halfSizeBox.Y;
+				}
+			}
+
+
+
+
 			/// determine how far is the circle from the point
 			// if the distance is less than the radius then this point is inside the circle and the objects are colliding
 			Vector2 localPoint = boxToCircle - ClosestPointOnBox;
 			// use squared magnitude and radius to be more efficient
-			if (localPoint.Magnitude() < radius)
+			if (localPoint.MagnitudeSqr() > radius*radius && !inside)
 			{
-				Vector2 normal = localPoint.Normalized();
-				Vector2 a = ClosestPointOnBox + centreBox;
-				Vector2 b = centreCircle + normal * -1 * radius;
-				float depth = radius - localPoint.Magnitude();
-				return Manifold(a, b, normal, depth);
+				return Manifold();
 			}
+			Vector2 normal = localPoint.Normalized();
+			Vector2 a = ClosestPointOnBox + centreBox;
+			Vector2 b = centreCircle + normal * -1 * radius;
+			float depth = radius - localPoint.Magnitude();
+
+			if (inside)
+			{
+				normal = normal * -1;
+			}
+
+
+			return Manifold(a, b, normal, depth);
 			
-			return Manifold();
+
 			
 		}
 		Manifold FindBoxBoxManifold(const Transform& transformA, const BoxCollider* boxA, const Transform& transformB, const BoxCollider* boxB)

@@ -10,13 +10,14 @@ public:
 	Entity(const sf::Vector2f& pos, const Physics2D::Vector2 vel);
 	~Entity();
 
-	std::shared_ptr<Physics2D::Rigidbody> GetRigidbody();
+	std::shared_ptr<Physics2D::Rigidbody> GetRigidbody() const;
 	virtual void Update(float dt);
-	std::shared_ptr<Physics2D::Rigidbody> m_Rigidbody = nullptr;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
+	inline std::shared_ptr<sf::Shape> GetShape() { return m_Shape; };
 protected:
+	
+	std::shared_ptr<Physics2D::Rigidbody> m_Rigidbody = nullptr;
 	std::shared_ptr<sf::Shape> m_Shape;
 };
 

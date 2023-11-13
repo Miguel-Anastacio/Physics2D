@@ -1,6 +1,7 @@
 #pragma once
 #include "Colliders/Collider.h"
 #include"../Transform.hpp"
+#include "SimpleCollisionDetection.h"
 #include <memory>
 namespace Physics2D
 {
@@ -20,13 +21,23 @@ namespace Physics2D
 
 		void SetID(int id);
 		uint64_t GetID();
+
+		bool IsKinematic() const;
+		void SetIsKinematic(const bool& kin);
+		bool IsTrigger() const;
+
+		bool GetAabb(Aabb& aabb) const;
+		void UpdateAabb();
+
+		virtual void Dummy() {};
 	protected:
 		std::shared_ptr<Collider> m_ColliderShared;
 		Transform m_Transform;
-		
 		uint64_t ID;
-		bool m_bKinematic;
-		bool m_bTrigger;	
+		Aabb m_BroadPhaseAabb;
+		bool m_IsKinematic = true;
+		bool m_IsTrigger = false;
+
 	};
 
 }

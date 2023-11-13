@@ -48,10 +48,22 @@
     <ClInclude Include="source\Transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Dynamics\Solver.h">
+    <ClInclude Include="source\Dynamics\Solvers\Solver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Collision\CollisionStruct.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Dynamics\Solvers\ImpulseSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Dynamics\Solvers\SmoothPositionSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Collision\QuadTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Collision\SimpleCollisionDetection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,7 +95,13 @@
     <ClCompile Include="source\Collision\Colliders\AabbCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Dynamics\Solver.cpp">
+    <ClCompile Include="source\Dynamics\Solvers\Solver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Dynamics\Solvers\ImpulseSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Dynamics\Solvers\SmoothPositionSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

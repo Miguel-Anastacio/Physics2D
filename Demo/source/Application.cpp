@@ -15,6 +15,27 @@ Application::Application()
     //glewInit();
     m_EnityManager = new EntityManager(1200, 780);
     
+    if (m_Font.loadFromFile("fonts/Roboto-Bold.ttf"))
+    {
+
+        m_Fps.setFont(m_Font);
+        m_FpsCount.setFont(m_Font);
+        m_Objects.setFont(m_Font);
+        m_ObjectsCount.setFont(m_Font);
+    }
+
+    m_Fps.setPosition(sf::Vector2f(0, 0));
+    m_FpsCount.setPosition(sf::Vector2f(300, 0));
+    m_Fps.setFillColor(sf::Color::Green);
+    m_FpsCount.setFillColor(sf::Color::Green);
+    m_Objects.setPosition(sf::Vector2f(0, 50));
+    m_ObjectsCount.setPosition(sf::Vector2f(300, 50));
+    m_Objects.setFillColor(sf::Color::Green);
+    m_ObjectsCount.setFillColor(sf::Color::Green);
+
+    m_Fps.setString("FPS: ");
+    m_Objects.setString("Number of Objects: ");
+
 }
 
 Application::~Application()
@@ -57,10 +78,22 @@ void Application::Run()
 
         glfwSwapBuffers(Window);
     }*/
-   
+
+    //m_Window.setFramerateLimit(60.0f);
     sf::Clock clock;
+    // Create Some Static Objects
+    Aabb Floor(sf::Vector2f(100, 500), Physics2D::Vector2(400, 50));
+    Floor.GetRigidbody()->SetIsKinematic(false);
+    Floor.GetShape()->setFillColor(sf::Color::Red);
+    Floor.GetShape()->setOutlineColor(sf::Color::White);
+
+
 
     //m_World.SetCollisionBodiesReference(m_EnityManager->GetBodies());
+    // add floor
+    m_EnityManager->AddEntity(Floor);
+    //m_EnityManager->m_Entities.push_back(Aabb(sf::Vector2f(100, 500), Physics2D::Vector2(400, 50)));
+    m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
 
     while (m_Window.isOpen())
     {
@@ -79,21 +112,25 @@ void Application::Run()
                 //auto physicsPos = SfmlPosToSpe(positionFloat);
                 //rcle ent(positionFloat, Physics2D::Vector2(0, 300 * m_EnityManager->GetEntities().size()));
                 //Circle circle(positionFloat, 50.0f);
-                if (m_EnityManager->GetEntities().size() < 10)
+                if (m_EnityManager->GetEntities().size() < 1000)
                 {
                     if (event.mouseButton.button == sf::Mouse::Left)
                     {
                         /* m_EnityManager->AddEntity(Circle(positionFloat, 50.0f));
                          m_World.m_CollisionBodiesVector.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());*/
-                        m_EnityManager->AddEntity(Circle(sf::Vector2f(500, 150),  50.0f));
-                        m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
+
+                        for (int i = 0; i < 100; i++)
+                        {                        
+                            m_EnityManager->AddEntity(Circle(positionFloat, 10.0f));
+                            m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
+                            positionFloat.x +=  20;
+                        }
                     }
                     if (event.mouseButton.button == sf::Mouse::Right)
                     {
-                        /* m_EnityManager->AddEntity(Circle(positionFloat, 50.0f));
-                         m_World.m_CollisionBodiesVector.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());*/
-                        m_EnityManager->AddEntity(Aabb(sf::Vector2f(500, 400), Physics2D::Vector2(50, 30)));
-                        m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
+                         m_EnityManager->AddEntity(Aabb(positionFloat, Physics2D::Vector2(25, 25)));
+                         m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
+
                     }
                 }
                     //m_EnityManager
@@ -114,6 +151,23 @@ void Application::Run()
             m_Window.draw(ent);
         }
 
+        RenderDebugInfo(deltaTime.asSeconds());
+
         m_Window.display();
     }
+}
+
+void Application::RenderDebugInfo(const float& dt)
+{
+    float fps = 1 / dt;
+    //m_FpsCount.setString(sf::String(std::to_string(fps)));
+    m_ObjectsCount.setString(sf::String(std::to_string(m_EnityManager->m_Entities.size())));
+    int numebr = m_EnityManager->m_Entities.size();
+    numebr *= 19;
+    m_Window.draw(m_Fps);
+    m_Window.draw(m_FpsCount);
+    m_Window.draw(m_Objects);
+    m_Window.draw(m_ObjectsCount);
+
+  
 }

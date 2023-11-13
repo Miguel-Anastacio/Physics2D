@@ -27,8 +27,8 @@ std::vector<Entity> EntityManager::GetEntities()
 
 void EntityManager::AddEntity(const Entity& entity)
 {
-	entity.m_Rigidbody->SetID(count);
-	m_Entities.emplace_back(entity);
+	entity.GetRigidbody()->SetID(count);
+	m_Entities.push_back(entity);
 	count++;
 	//m_Bodies.emplace_back(entity.m_Rigidbody);
 }
@@ -46,9 +46,9 @@ std::vector<uint64_t> EntityManager::CleanupEntities()
 	std::vector<uint64_t> ids;
 	for (std::vector<Entity>::iterator it = m_Entities.begin(); it != m_Entities.end();)
 	{
-		if (it->m_Rigidbody->GetPosition().Y > m_HEIGHT || it->m_Rigidbody->GetPosition().X > m_WIDTH)
+		if (it->GetRigidbody()->GetPosition().Y > m_HEIGHT || it->GetRigidbody()->GetPosition().X > m_WIDTH)
 		{
-			ids.push_back(it->m_Rigidbody->GetID());
+			ids.push_back(it->GetRigidbody()->GetID());
 			it = m_Entities.erase(it);
 		}
 		else

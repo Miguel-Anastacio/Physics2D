@@ -4,15 +4,15 @@ Entity::Entity(const sf::Vector2f& pos)
 {
 	m_Rigidbody = std::make_shared<Physics2D::Rigidbody>();
 	m_Rigidbody->SetPosition(Physics2D::Vector2(pos.x, pos.y));
-	m_Rigidbody->SetVelocity(Physics2D::Vector2(0, 50));
-	m_Rigidbody->SetInvMass(1.0f);
+	m_Rigidbody->SetVelocity(Physics2D::Vector2(0, 0));
+	m_Rigidbody->SetMass(1.0f);
 }
 Entity::Entity(const sf::Vector2f& pos, const Physics2D::Vector2 vel)
 {
 	m_Rigidbody = std::make_shared<Physics2D::Rigidbody>();
 	m_Rigidbody->SetPosition(Physics2D::Vector2(pos.x, pos.y));
 	m_Rigidbody->SetVelocity(vel);
-	m_Rigidbody->SetInvMass(1.0f);
+	m_Rigidbody->SetMass(1.0f);
 
 }
 Entity::~Entity()
@@ -21,7 +21,7 @@ Entity::~Entity()
 
 }
 
-std::shared_ptr<Physics2D::Rigidbody> Entity::GetRigidbody()
+std::shared_ptr<Physics2D::Rigidbody> Entity::GetRigidbody() const
 {
 	return m_Rigidbody;
 }
@@ -34,6 +34,7 @@ void Entity::Update(float dt)
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform *= getTransform();
-	target.draw(*m_Shape, states);
+	if(m_Shape != nullptr)
+		target.draw(*m_Shape, states);
 }
 

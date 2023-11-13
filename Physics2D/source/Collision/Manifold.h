@@ -25,7 +25,14 @@ namespace Physics2D
 			HasCollision = false;
 		}
 
-
+		Manifold Swaped() const
+		{
+			Manifold copy = *this;
+			copy.A = B;
+			copy.B = A;
+			copy.Normal = Normal*-1;
+			return copy;
+		}
 
 	};
 }

@@ -30,4 +30,10 @@ namespace Physics2D
 		}
 	};
 
+	struct CollisionPair
+	{
+		CollisionBody* bodyA;
+		CollisionBody* bodyB;
+	};
+
 }

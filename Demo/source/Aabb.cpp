@@ -10,7 +10,7 @@ Aabb::Aabb(const sf::Vector2f& pos, const Physics2D::Vector2& HalfSize)
 	m_Shape = std::make_shared<sf::RectangleShape>(RectShape);
 	m_Collider = std::make_shared<Physics2D::AabbCollider>(HalfSize.X, HalfSize.Y);
 	m_Rigidbody->SetColliderShared(m_Collider);
-	
+	m_Rigidbody->SetMass(1);
 }
 
 Aabb::Aabb(const sf::Vector2f& pos, const Physics2D::Vector2& vel, const Physics2D::Vector2& HalfSize)
@@ -21,6 +21,6 @@ Aabb::Aabb(const sf::Vector2f& pos, const Physics2D::Vector2& vel, const Physics
 
 void Aabb::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	//states.transform *= getTransform();
-	//target.draw(m_RectShape, states);
+	states.transform *= getTransform();
+	target.draw(m_RectShape, states);
 }
