@@ -1,5 +1,6 @@
 #include "PhysicsWorld.h"
 #include <iostream>
+#include <algorithm>
 #include "Dynamics/Solvers/ImpulseSolver.h"
 #include "Dynamics/Solvers/SmoothPositionSolver.h"
 #include "Collision/QuadTree.h"
@@ -59,37 +60,81 @@ namespace Physics2D
 		}
 	}
 
+	void PhysicsWorld::NarrowPhase(std::vector<Collision>& collisions)
+	{
+		for (auto& pair : m_BroadphaseCollisions)
+		{
+			Collider* colA = pair.bodyA->GetColliderShared().get();
+			Collider* colB = pair.bodyB->GetColliderShared().get();
+			Transform tA = pair.bodyA->GetTransform();
+			Transform tB = pair.bodyB->GetTransform();
+			Manifold manifold = colA->TestCollision(tA, colB, tB);
+			if (manifold.HasCollision)
+			{
+				collisions.emplace_back(manifold, pair.bodyA, pair.bodyB);
+			}
+		}
+
+		//std::cout << "Collisions detected BP: " << collisions.size() << "\n";
+
+	}
+
 	void PhysicsWorld::BroadPhase()
 	{
 		m_BroadphaseCollisions.clear();
-		QuadTree<CollisionBody*> tree(Vector2(512, 512), 2, 5);
+		m_BroadphaseCollisionsVector.clear();
+		QuadTree<CollisionBody*> tree(Vector2(600, 390), 6, 4);
 		for (auto& body : m_CollisionBodies)
 		{
 			Aabb boundingBox;
 			if (!body->GetAabb(boundingBox))
 				continue;
 
-			tree.Insert(body.get(), boundingBox.Centre, boundingBox.HalfSize);
+			tree.Insert(body.get(), body->GetTransform().Position, boundingBox.HalfSize);
 		}
 
-		tree.OperateOnContents([&](std::list<QuadTreeEntry<CollisionBody*>>& data) 
+		if (m_CollisionBodies.size() > 48)
+		{
+			int a = 0;
+		}
+		tree.OperateOnContents([&](std::list<QuadTreeEntry<CollisionBody*>>& data)
 			{
 				CollisionPair pair;
-				for (auto i = data.begin(); i != data.end();i++)
+				for (auto i = data.begin(); i != data.end(); i++)
 				{
 					for (auto j = std::next(i); j != data.end(); j++)
 					{
 						pair.bodyA = std::min(i->Object, j->Object);
 						pair.bodyB = std::max(i->Object, j->Object);
 						m_BroadphaseCollisions.insert(pair);
+						//CollisionPairTest test;
+						//test.bodyA = std::min(i->Object, j->Object);
+						//test.bodyB = std::max(i->Object, j->Object);
+						//m_BroadphaseCollisionsTest.insert(test);
+						////m_BroadphaseCollisionsVector.push_back(pair);
 					}
 				}
-			})
-
-		if (m_CollisionBodies.size() > 20)
+			});
+		/*if (m_BroadphaseCollisionsTest.size() != m_BroadphaseCollisions.size())
+			int a = 0;*/
+	/*	std::sort(m_BroadphaseCollisionsVector.begin(), m_BroadphaseCollisionsVector.end(), SortPairs);
+		int i = 0;
+		std::vector<CollisionPair> uniquePairs;
+		while (i < m_BroadphaseCollisionsVector.size())
 		{
-			int a = 0;
-		}
+			auto pair = m_BroadphaseCollisionsVector.begin() + i;
+			uniquePairs.push_back(*pair);
+			i++;
+			while (i < m_BroadphaseCollisionsVector.size())
+			{
+				auto potential_dup= m_BroadphaseCollisionsVector.begin() + i;
+				if (*(pair->bodyA) != *(potential_dup->bodyB) || *(pair->bodyB) != *(potential_dup->bodyA))
+					break;
+				else
+					int a = 2;
+				i++;
+			}
+		}*/
 	}
 
 	void PhysicsWorld::ResolveCollisions(const float& dt)
@@ -97,34 +142,34 @@ namespace Physics2D
 		std::vector<Collision> collisions;
 		Manifold manifold;
 
-
 		// Broad Phase
 		BroadPhase();
+		NarrowPhase(collisions);
+		//collisions.clear();
+		//int maxBody = m_CollisionBodies.size();
+		//if (m_CollisionBodies.size() > 10000)
+		//{
+		//	maxBody = 10000;
+		//}
+		//for (int i = 0; i < maxBody; i++)
+		//{
+		//	for (int j = i+1; j < maxBody; j++)
+		//	{
+		//		if (i == j)
+		//			break;
+		//		Collider* col = m_CollisionBodies[i]->GetColliderShared().get();
+		//		Collider* col2 = m_CollisionBodies[j]->GetColliderShared().get();
+		//		Transform t2 = m_CollisionBodies[j]->GetTransform();
+		//		manifold = col->TestCollision(m_CollisionBodies[i]->GetTransform(), col2, t2);
+		//		if (manifold.HasCollision)
+		//		{
+		//			collisions.emplace_back(manifold, m_CollisionBodies[i].get(), m_CollisionBodies[j].get());
+		//			//collisions.back().Print();
+		//		}
+		//	}
+		//}
 
-
-		int maxBody = m_CollisionBodies.size();
-		if (m_CollisionBodies.size() > 10000)
-		{
-			maxBody = 10000;
-		}
-		for (int i = 0; i < maxBody; i++)
-		{
-			for (int j = i+1; j < maxBody; j++)
-			{
-	
-				if (i == j)
-					break;
-				Collider* col = m_CollisionBodies[i]->GetColliderShared().get();
-				Collider* col2 = m_CollisionBodies[j]->GetColliderShared().get();
-				Transform t2 = m_CollisionBodies[j]->GetTransform();
-				manifold = col->TestCollision(m_CollisionBodies[i]->GetTransform(), col2, t2);
-				if (manifold.HasCollision)
-				{
-					collisions.emplace_back(manifold, m_CollisionBodies[i].get(), m_CollisionBodies[j].get());
-					//collisions.back().Print();
-				}
-			}
-		}
+		//std::cout << "Collisions detected: " << collisions.size() << "\n";
 
 		// resolve collisions
 		for (Solver* solver : m_Solvers)

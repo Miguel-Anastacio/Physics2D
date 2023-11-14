@@ -119,7 +119,7 @@ void Application::Run()
                         /* m_EnityManager->AddEntity(Circle(positionFloat, 50.0f));
                          m_World.m_CollisionBodiesVector.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());*/
 
-                        for (int i = 0; i < 100; i++)
+                        for (int i = 0; i < 20; i++)
                         {                        
                             m_EnityManager->AddEntity(Circle(positionFloat, 10.0f));
                             m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());

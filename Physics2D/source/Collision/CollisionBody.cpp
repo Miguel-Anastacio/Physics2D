@@ -87,6 +87,11 @@ namespace Physics2D
 
 		}
 	}
+	bool CollisionBody::operator!=(const CollisionBody& other) const
+	{
+		return ID != other.ID;
+		
+	}
 	bool CollisionBody::GetAabb(Aabb& aabb) const
 	{
 		if (m_ColliderShared == nullptr)

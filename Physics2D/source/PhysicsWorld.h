@@ -27,9 +27,11 @@ namespace Physics2D
 		std::vector<Solver*> m_Solvers;
 
 		std::set<CollisionPair> m_BroadphaseCollisions;
+		std::set<CollisionPairTest> m_BroadphaseCollisionsTest;
+		std::vector<CollisionPair> m_BroadphaseCollisionsVector;
 
 		void BroadPhase();
-		void NarrowPhase();
+		void NarrowPhase(std::vector<Collision>& collisions);
 		
 		void ApplyGravity();
 		void ResolveCollisions(const float& dt);

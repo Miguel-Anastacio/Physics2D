@@ -46,7 +46,7 @@ namespace Physics2D
 
 		void OperateOnContents(QuadTreeFunc& func)
 		{
-			if (m_Children)
+			if (!m_Children.empty())
 			{
 				for (int i = 0; i < 4; i++)
 				{
@@ -127,7 +127,7 @@ namespace Physics2D
 	public:
 		QuadTree(const Vector2& size, int maxDepth = 6, int maxSize = 5)
 		{
-			m_Root = QuadTreeNode<T>(Vector2(512, 512), size);
+			m_Root = QuadTreeNode<T>(Vector2(600, 390), size);
 			m_MaxDepth = maxDepth;
 			m_MaxSize = maxSize;
 		}
@@ -136,7 +136,7 @@ namespace Physics2D
 		{
 			m_Root.Insert(object, objectPos, objectSize, m_MaxDepth, m_MaxSize);
 		}
-		void OperateOnCOntents(typename QuadTreeNode<T>::QuadTreeFunc func)
+		void OperateOnContents(typename QuadTreeNode<T>::QuadTreeFunc func)
 		{
 			m_Root.OperateOnContents(func);
 		}

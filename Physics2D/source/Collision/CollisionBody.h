@@ -30,10 +30,13 @@ namespace Physics2D
 		void UpdateAabb();
 
 		virtual void Dummy() {};
+
+		bool operator!=(const CollisionBody& other) const;
+		
 	protected:
+		uint64_t ID;
 		std::shared_ptr<Collider> m_ColliderShared;
 		Transform m_Transform;
-		uint64_t ID;
 		Aabb m_BroadPhaseAabb;
 		bool m_IsKinematic = true;
 		bool m_IsTrigger = false;

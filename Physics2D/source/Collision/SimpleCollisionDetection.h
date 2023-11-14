@@ -16,11 +16,13 @@ namespace Physics2D
 
 	static bool TestAABB(const Vector2& posA, const Vector2& sizeA, const Vector2& posB, const Vector2& sizeB)
 	{
+		Vector2 centreA = posA + sizeA;
+		Vector2 centreB = posB;
 
 		Vector2 halfSizeA = sizeA;
 		Vector2 halfSizeB = sizeB;
 
-		Vector2 BtoA = posA - posB;
+		Vector2 BtoA = centreA - centreB;
 		Vector2 AtoB = BtoA * -1;
 
 		// test overlap on x axis
