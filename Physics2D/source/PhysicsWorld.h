@@ -20,6 +20,8 @@ namespace Physics2D
 		void Step(float dt);
 
 		std::vector<std::shared_ptr<CollisionBody>> m_CollisionBodies;
+		int Collisions = 0;
+		int CollisionsBP = 0;
 	private:
 		ImpulseSolver* m_ImpulseSolver;
 		SmoothPositionSolver* m_SmoothPositionSolver;

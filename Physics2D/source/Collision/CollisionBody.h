@@ -23,7 +23,7 @@ namespace Physics2D
 		uint64_t GetID();
 
 		bool IsKinematic() const;
-		void SetIsKinematic(const bool& kin);
+		inline void SetIsKinematic(bool kin) {	m_IsKinematic = kin;}
 		bool IsTrigger() const;
 
 		bool GetAabb(Aabb& aabb) const;

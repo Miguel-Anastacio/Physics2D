@@ -56,10 +56,6 @@ namespace Physics2D
 	{
 		return m_IsKinematic;
 	}
-	void CollisionBody::SetIsKinematic(const bool& kin)
-	{
-		m_IsKinematic = false;
-	}
 	bool CollisionBody::IsTrigger() const
 	{
 		return m_IsTrigger;

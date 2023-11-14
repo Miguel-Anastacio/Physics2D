@@ -2,6 +2,7 @@
 #include "../Collision/CollisionBody.h"
 namespace Physics2D
 {
+
 	struct MassData
 	{
 		float Mass;
@@ -14,8 +15,21 @@ namespace Physics2D
 
 	struct Material
 	{
-		float Density = 1.0f;
+		float Density = 100.0f;
 		float Restitution = 0.5f;
+	};
+	struct RigidBodyInit
+	{
+		Material Material;
+		Vector2 Velocity;
+		Vector2 InitialForce;
+		bool Kinematic = true;
+		float StaticFriction = 0.3;
+		float DynamicFriction = 0.1;
+		float GravityScale = 1.0f;
+
+		float InitialTorque = 0.0f;
+		float AngularVelocity = 0.0f;
 	};
 
 	class Rigidbody : public CollisionBody
@@ -24,6 +38,8 @@ namespace Physics2D
 	public:
 		Rigidbody();
 		Rigidbody(const Material& physMat, const float& gravScale);
+
+		void Init(const RigidBodyInit& init);
 
 		void SetForce(const Vector2& force);
 		Vector2 GetForce() const;

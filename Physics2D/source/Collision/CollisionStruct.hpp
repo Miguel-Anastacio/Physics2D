@@ -55,15 +55,15 @@ namespace Physics2D
 		CollisionBody* bodyA;
 		CollisionBody* bodyB;
 
-		bool operator < (const CollisionPairTest& other) const
-		{
-			//uint64_t otherHash = std::hash<int>{}((uint64_t)other.bodyA + (uint64_t)other.bodyB + other.bodyA->GetID() + other.bodyB->GetID());
-			//uint64_t thisHash = std::hash<int>{}((uint64_t)bodyA + (uint64_t)bodyB + bodyA->GetID() + bodyB->GetID());
-			uint64_t otherHash = (uint64_t)bodyA + (uint64_t)bodyB << 8;
-			uint64_t thisHash = (uint64_t)other.bodyA + (uint64_t)other.bodyB << 8;
+		//bool operator < (const CollisionPairTest& other) const
+		//{
+		//	//uint64_t otherHash = std::hash<int>{}((uint64_t)other.bodyA + (uint64_t)other.bodyB + other.bodyA->GetID() + other.bodyB->GetID());
+		//	//uint64_t thisHash = std::hash<int>{}((uint64_t)bodyA + (uint64_t)bodyB + bodyA->GetID() + bodyB->GetID());
+		//	uint64_t otherHash = (uint64_t)bodyA + (uint64_t)bodyB << 8;
+		//	uint64_t thisHash = (uint64_t)other.bodyA + (uint64_t)other.bodyB << 8;
 
-			return (otherHash < thisHash);
-		}
+		//	return (otherHash < thisHash);
+		//}
 		//bool operator<(const CollisionPair& other) const 
 		//{
 		//	return 

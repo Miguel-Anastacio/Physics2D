@@ -1,13 +1,13 @@
 #include "Entity.h"
 
-Entity::Entity(const sf::Vector2f& pos)
+Entity::Entity(sf::Vector2f pos)
 {
 	m_Rigidbody = std::make_shared<Physics2D::Rigidbody>();
 	m_Rigidbody->SetPosition(Physics2D::Vector2(pos.x, pos.y));
 	m_Rigidbody->SetVelocity(Physics2D::Vector2(0, 0));
 	m_Rigidbody->SetMass(1.0f);
 }
-Entity::Entity(const sf::Vector2f& pos, const Physics2D::Vector2 vel)
+Entity::Entity(sf::Vector2f pos, Physics2D::Vector2 vel)
 {
 	m_Rigidbody = std::make_shared<Physics2D::Rigidbody>();
 	m_Rigidbody->SetPosition(Physics2D::Vector2(pos.x, pos.y));

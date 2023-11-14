@@ -16,6 +16,23 @@ namespace Physics2D
 		gravityScale = gravScale;
 	}
 
+	void Rigidbody::Init(const RigidBodyInit& init)
+	{
+		
+		SetForce(init.InitialForce);
+		SetVelocity(init.Velocity);
+		SetStaticFriction(init.StaticFriction);
+		SetDynamicFriction(init.DynamicFriction);
+
+		SetMaterial(init.Material);
+
+		SetIsKinematic(init.Kinematic);
+		if (!init.Kinematic)
+		{
+			SetMass(0);
+		}
+	}
+
 	void Rigidbody::SetForce(const Vector2& force)
 	{
 		m_Force = force;
@@ -88,6 +105,8 @@ namespace Physics2D
 	void Rigidbody::SetMaterial(const Material& mat)
 	{
 		m_Material = mat;
+		m_MassData.Mass = m_Material.Density / m_ColliderShared.get()->CalculateArea(m_Transform);
+		m_MassData.InvMass = 1 / m_MassData.Mass;
 	}
 
 	Material Rigidbody::GetMaterial() const

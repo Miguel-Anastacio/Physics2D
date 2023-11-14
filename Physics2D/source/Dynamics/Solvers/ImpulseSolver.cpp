@@ -41,9 +41,9 @@ namespace Physics2D
 		/*rb->SetVelocity(rb->GetVelocity() + impulse * rb->GetInvMass());
 		rb2->SetVelocity(rb2->GetVelocity() - impulse * rb2->GetInvMass());*/
 		if(rb->IsKinematic())
-			rb->SetVelocity(rb->GetVelocity() + impulse * ratio);
+			rb->SetVelocity(rb->GetVelocity() + impulse * rb->GetInvMass());
 		if(rb2->IsKinematic())
-			rb2->SetVelocity(rb2->GetVelocity() - impulse * ratio2);
+			rb2->SetVelocity(rb2->GetVelocity() - impulse * rb2->GetInvMass());
 
 		// FRICTION
 

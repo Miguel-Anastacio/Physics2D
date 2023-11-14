@@ -28,4 +28,9 @@ namespace Physics2D
 		return detection::FindCircleAabbManifold(transform, this, colliderTransform, collider);
 	}
 
+	float CircleCollider::CalculateArea(const Transform& t) const
+	{
+		return 3.14159265358979 * m_Radius * m_Radius;
+	}
+
 }

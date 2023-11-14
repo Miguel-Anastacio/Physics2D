@@ -6,8 +6,8 @@
 class Entity : public sf::Drawable, public sf::Transformable
 {
 public: 
-	Entity(const sf::Vector2f& pos);
-	Entity(const sf::Vector2f& pos, const Physics2D::Vector2 vel);
+	Entity(sf::Vector2f pos);
+	Entity(sf::Vector2f pos,Physics2D::Vector2 vel);
 	~Entity();
 
 	std::shared_ptr<Physics2D::Rigidbody> GetRigidbody() const;

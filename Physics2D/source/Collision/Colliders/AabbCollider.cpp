@@ -24,4 +24,9 @@ namespace Physics2D
 	{
 		return detection::FindAabbAabbManifold(transform, this, colliderTransform, collider);
 	}
+	float AabbCollider::CalculateArea(const Transform& t) const
+	{
+		float a = m_HalfHeight * 2 * t.Scale.Y * m_HalfWidth * 2 * t.Scale.X;
+		return a;
+	}
 }

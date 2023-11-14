@@ -12,6 +12,8 @@ namespace Physics2D
 		m_Solvers.push_back(m_ImpulseSolver);
 		m_SmoothPositionSolver = new SmoothPositionSolver();
 		m_Solvers.push_back(m_SmoothPositionSolver);
+
+		
 	}
 
 	PhysicsWorld::~PhysicsWorld()
@@ -62,6 +64,7 @@ namespace Physics2D
 
 	void PhysicsWorld::NarrowPhase(std::vector<Collision>& collisions)
 	{
+		int i = 0;
 		for (auto& pair : m_BroadphaseCollisions)
 		{
 			Collider* colA = pair.bodyA->GetColliderShared().get();
@@ -73,9 +76,11 @@ namespace Physics2D
 			{
 				collisions.emplace_back(manifold, pair.bodyA, pair.bodyB);
 			}
+			i++;
 		}
-
-		//std::cout << "Collisions detected BP: " << collisions.size() << "\n";
+		
+		CollisionsBP = collisions.size();
+		//std::cout << "Collisions tested BP: " << i << "\n";
 
 	}
 
@@ -83,7 +88,7 @@ namespace Physics2D
 	{
 		m_BroadphaseCollisions.clear();
 		m_BroadphaseCollisionsVector.clear();
-		QuadTree<CollisionBody*> tree(Vector2(600, 390), 6, 4);
+		QuadTree<CollisionBody*> tree(Vector2(600, 390), 6, 6);
 		for (auto& body : m_CollisionBodies)
 		{
 			Aabb boundingBox;
@@ -93,10 +98,10 @@ namespace Physics2D
 			tree.Insert(body.get(), body->GetTransform().Position, boundingBox.HalfSize);
 		}
 
-		if (m_CollisionBodies.size() > 48)
+		/*if (m_CollisionBodies.size() > 48)
 		{
 			int a = 0;
-		}
+		}*/
 		tree.OperateOnContents([&](std::list<QuadTreeEntry<CollisionBody*>>& data)
 			{
 				CollisionPair pair;
@@ -146,6 +151,7 @@ namespace Physics2D
 		BroadPhase();
 		NarrowPhase(collisions);
 		//collisions.clear();
+		//int aux = 0;
 		//int maxBody = m_CollisionBodies.size();
 		//if (m_CollisionBodies.size() > 10000)
 		//{
@@ -166,11 +172,12 @@ namespace Physics2D
 		//			collisions.emplace_back(manifold, m_CollisionBodies[i].get(), m_CollisionBodies[j].get());
 		//			//collisions.back().Print();
 		//		}
+		//		aux++;
 		//	}
 		//}
+		//std::cout << "Collisions tested: " << aux << "\n";
 
-		//std::cout << "Collisions detected: " << collisions.size() << "\n";
-
+		Collisions = collisions.size();
 		// resolve collisions
 		for (Solver* solver : m_Solvers)
 		{
@@ -189,7 +196,6 @@ namespace Physics2D
 				rb->SetVelocity(rb->GetVelocity() + rb->GetForce() * rb->GetInvMass() * dt);
 
 				rb->SetPosition(rb->GetPosition() + rb->GetVelocity() * dt);
-
 				rb->SetForce(Vector2(0, 0));
 			}
 

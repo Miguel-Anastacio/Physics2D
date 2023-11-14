@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Circle.h"
 #include "Aabb.h"
+#include "imgui-SFML/imgui-SFML.h"
 
 Application::Application()
     : m_Window( 
@@ -22,6 +23,8 @@ Application::Application()
         m_FpsCount.setFont(m_Font);
         m_Objects.setFont(m_Font);
         m_ObjectsCount.setFont(m_Font);
+        m_CollisionsBPCount.setFont(m_Font);
+        m_CollisionsCount.setFont(m_Font);
     }
 
     m_Fps.setPosition(sf::Vector2f(0, 0));
@@ -32,6 +35,15 @@ Application::Application()
     m_ObjectsCount.setPosition(sf::Vector2f(300, 50));
     m_Objects.setFillColor(sf::Color::Green);
     m_ObjectsCount.setFillColor(sf::Color::Green);
+    m_CollisionsBPCount.setFillColor(sf::Color::Red);
+    m_CollisionsBPCount.setPosition(0, 100);
+    m_CollisionsCount.setFillColor(sf::Color::Green);
+    m_CollisionsCount.setPosition(0, 150);
+
+    bool NoMove = false;
+    bool NoResize = false;
+    bool NoCollapse = true;
+    m_EngineData = std::make_unique<EngineDataUI>(NoMove, NoResize, NoCollapse, "Engine Data", true);
 
     m_Fps.setString("FPS: ");
     m_Objects.setString("Number of Objects: ");
@@ -78,7 +90,7 @@ void Application::Run()
 
         glfwSwapBuffers(Window);
     }*/
-
+    ImGui::SFML::Init(m_Window);
     //m_Window.setFramerateLimit(60.0f);
     sf::Clock clock;
     // Create Some Static Objects
@@ -87,7 +99,8 @@ void Application::Run()
     Floor.GetShape()->setFillColor(sf::Color::Red);
     Floor.GetShape()->setOutlineColor(sf::Color::White);
 
-
+    auto& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     //m_World.SetCollisionBodiesReference(m_EnityManager->GetBodies());
     // add floor
@@ -101,11 +114,12 @@ void Application::Run()
         sf::Event event;
         while (m_Window.pollEvent(event))
         {
+            ImGui::SFML::ProcessEvent(m_Window, event);
             if (event.type == sf::Event::Closed)
             {
                 m_Window.close();
             }
-            else if (event.type == sf::Event::MouseButtonPressed)
+            else if (event.type == sf::Event::MouseButtonPressed && !m_EngineData->HoveringUI)
             {
                 auto positionInt = sf::Mouse::getPosition(m_Window);
                 auto positionFloat = m_Window.mapPixelToCoords(positionInt);
@@ -121,14 +135,17 @@ void Application::Run()
 
                         for (int i = 0; i < 20; i++)
                         {                        
-                            m_EnityManager->AddEntity(Circle(positionFloat, 10.0f));
+                            //m_EnityManager->AddEntity(Circle(positionFloat, 10.0f));
+                            m_EnityManager->AddEntity(Circle(positionFloat,m_EngineData->GetBodyRadius(), m_EngineData->GetBodySpecs(), m_EngineData->GetCircleColor()));
                             m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
                             positionFloat.x +=  20;
                         }
                     }
                     if (event.mouseButton.button == sf::Mouse::Right)
                     {
-                         m_EnityManager->AddEntity(Aabb(positionFloat, Physics2D::Vector2(25, 25)));
+                         //m_EnityManager->AddEntity(Aabb(positionFloat, Physics2D::Vector2(25, 25)));
+                         //m_EnityManager->AddEntity(Aabb(positionFloat, m_EngineData->GetBodySize(), m_EngineData->GetBodySpecs()));
+                         m_EnityManager->AddEntity(Aabb(positionFloat, m_EngineData->GetBodySize(), m_EngineData->GetBodySpecs(), m_EngineData->GetAabbColor()));
                          m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
 
                     }
@@ -144,6 +161,13 @@ void Application::Run()
         // look into how to improve
         m_World.CleanupCollisionBodies(m_EnityManager->CleanupEntities());
 
+        ImGui::SFML::Update(m_Window, deltaTime);
+        //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+        //ImGui::ShowDemoWindow();
+      /*  ImGui::Begin("Test");
+        ImGui::Text("Hey");
+        ImGui::End();*/
+
         m_Window.clear();
 
         for (const auto& ent : m_EnityManager->GetEntities())
@@ -151,23 +175,35 @@ void Application::Run()
             m_Window.draw(ent);
         }
 
-        RenderDebugInfo(deltaTime.asSeconds());
-
+        RenderDebugInfo(deltaTime.asSeconds(), m_World.CollisionsBP, m_World.Collisions);
+        ImGui::SFML::Render(m_Window);
         m_Window.display();
     }
 }
 
-void Application::RenderDebugInfo(const float& dt)
+void Application::RenderDebugInfo(float dt, int collisionsBP, int collisions)
 {
-    float fps = 1 / dt;
-    //m_FpsCount.setString(sf::String(std::to_string(fps)));
+   float fps = 1 / dt;
+   /* m_FpsCount.setString(sf::String(std::to_string(fps)));
     m_ObjectsCount.setString(sf::String(std::to_string(m_EnityManager->m_Entities.size())));
+    m_CollisionsBPCount.setString(sf::String(std::to_string(collisionsBP)));
+    m_CollisionsCount.setString(sf::String(std::to_string(collisions)));
     int numebr = m_EnityManager->m_Entities.size();
     numebr *= 19;
     m_Window.draw(m_Fps);
     m_Window.draw(m_FpsCount);
     m_Window.draw(m_Objects);
     m_Window.draw(m_ObjectsCount);
+    m_Window.draw(m_CollisionsBPCount);
+    m_Window.draw(m_CollisionsCount);*/
+   float objCOunt = m_EnityManager->m_Entities.size();
+   m_EngineData->SetData({
+       Data("Fps", fps),
+       Data("Object Count", (float)m_EnityManager->m_Entities.size()),
+       Data("Collision Count", collisions)
+   });
+   m_EngineData->RenderPanel();
 
   
 }
+

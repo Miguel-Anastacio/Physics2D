@@ -15,8 +15,8 @@ namespace Physics2D
 				break;
 
 			Vector2 resolution = col.Contact.B - col.Contact.A;
-			const float percent = 0.5f;
-			const float slop = 0.01f;
+			const float percent = 0.4f;
+			const float slop = 0.03f;
 
 			Vector2 correction = col.Contact.Normal * percent * std::max(resolution.Magnitude() -slop, 0.0f) / (InvMassA + InvMassB);
 			if (bodyA != nullptr && bodyA->IsKinematic())

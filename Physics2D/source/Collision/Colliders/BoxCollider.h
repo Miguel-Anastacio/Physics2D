@@ -8,6 +8,7 @@ namespace Physics2D
 	public:
 		BoxCollider();
 		~BoxCollider();
+		
 		/*CollisionPoints TestCollisionBox(const Transform* transform, const BoxShape* box, const Transform* cirlceTransform) override;
 		CollisionPoints TestCollisionCircle(const Transform* transform, const CircleShape* cirle, const Transform* cirlceTransform) override;*/
 	private:

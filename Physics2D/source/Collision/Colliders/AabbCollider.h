@@ -11,6 +11,7 @@ namespace Physics2D
 		Manifold TestCollision(const Transform& transform, const BoxCollider* collider, const Transform& colliderTransform) const override;
 		Manifold TestCollision(const Transform& transform, const AabbCollider* collider, const Transform& colliderTransform) const override;
 
+		float CalculateArea(const Transform& t) const override;
 		float m_HalfWidth;
 		float m_HalfHeight;
 	};

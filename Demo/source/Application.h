@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <PhysicsWorld.h>
 #include "EntityManager.h"
+#include "Debug/EngineDataUI.h"
 
 class Application
 {
@@ -12,10 +13,11 @@ public:
 	~Application();
 	//bool InitGLFW();
 	void Run();
-	void RenderDebugInfo(const float& dt);
+	void RenderDebugInfo(float dt, int collisionsBP, int collisions);
 	
 private:
 
+private:
 	//GLFWwindow* Window;
 	//const char* glsl_version;
 	sf::RenderWindow m_Window;
@@ -27,6 +29,11 @@ private:
 	sf::Text m_FpsCount;
 	sf::Text m_Objects;
 	sf::Text m_ObjectsCount;
+	sf::Text m_CollisionsCount;
+	sf::Text m_CollisionsBPCount;
+
+	std::unique_ptr<EngineDataUI> m_EngineData;
+	
 
 };
 

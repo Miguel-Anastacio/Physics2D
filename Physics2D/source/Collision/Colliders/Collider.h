@@ -24,7 +24,7 @@ namespace Physics2D
 		virtual Manifold TestCollision(const Transform& transform, const BoxCollider* collider, const Transform& colliderTransform) const = 0;
 		virtual Manifold TestCollision(const Transform& transform, const AabbCollider* collider, const Transform& colliderTransform) const = 0;
 
-
+		virtual float CalculateArea(const Transform& t) const = 0;
 		Vector2 m_Center;
 
 	protected:
