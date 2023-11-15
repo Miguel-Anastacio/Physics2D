@@ -6,7 +6,7 @@ namespace Physics2D
 	{
 		Vector2 Position;
 		Vector2 Scale;
-		float Rotation;
+		float Rotation = 0;
 	};
 
 }
