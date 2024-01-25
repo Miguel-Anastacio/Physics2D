@@ -1,5 +1,5 @@
 #include "CircleCollider.h"
-#include "BoxCollider.h"
+#include "PolygonCollider.h"
 #include "../ManifoldGeneration.h"
 namespace Physics2D
 {
@@ -18,9 +18,9 @@ namespace Physics2D
 		return detection::FindCircleCircleManifold(transform, this, colliderTransform, collider);
 	}
 
-	Manifold CircleCollider::TestCollision(const Transform& transform, const BoxCollider* collider, const Transform& colliderTransform) const
+	Manifold CircleCollider::TestCollision(const Transform& transform, const PolygonCollider* collider, const Transform& colliderTransform) const
 	{
-		return detection::FindCircleBoxManifold(transform, this, colliderTransform, collider);
+		return detection::FindCirclePolygonManifold(transform, this, colliderTransform, collider);
 	}
 
 	Manifold CircleCollider::TestCollision(const Transform& transform, const AabbCollider* collider, const Transform& colliderTransform) const
@@ -30,7 +30,12 @@ namespace Physics2D
 
 	float CircleCollider::CalculateArea(const Transform& t) const
 	{
-		return 3.14159265358979 * m_Radius * m_Radius;
+		return 3.14159265358979 * m_Radius * m_Radius * t.Scale.X * t.Scale.X;
+	}
+
+	Vector2 CircleCollider::FindFurthestPoint(Vector2 direction) const
+	{
+		return Vector2();
 	}
 
 }

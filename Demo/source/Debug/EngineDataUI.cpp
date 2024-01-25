@@ -38,25 +38,43 @@ void EngineDataUI::RenderPanel()
 
             if (ImGui::CollapsingHeader("Next Body Spawn", true))
             {
-                // set kinematic
-                ImGui::Checkbox("Kinematic", &m_BodySpecs.Kinematic);
-                // set material
-                ImGui::InputFloat("Restitution", &m_BodySpecs.Material.Restitution);
-                ImGui::InputFloat("Density", &m_BodySpecs.Material.Density, 0.1, 1.0f);
-                // set initial velocity
-                float temp[2] = { m_BodySpecs.Velocity.X, m_BodySpecs.Velocity.Y };
-                ImGui::InputFloat2("Initial Velocity", temp, "%.0f");
-                m_BodySpecs.Velocity = Physics2D::Vector2(temp[0], temp[1]);
-                // set apply force at start
-                float temp1[2] = { m_BodySpecs.InitialForce.X, m_BodySpecs.InitialForce.Y };
-                ImGui::InputFloat2("Initial Force", temp1, "%.0f");
-                m_BodySpecs.InitialForce = Physics2D::Vector2(temp1[0], temp1[1]);
-                // set friction
-                ImGui::InputFloat("Static Friction", &m_BodySpecs.StaticFriction);
-                ImGui::InputFloat("Dynamic Friction", &m_BodySpecs.DynamicFriction);
-                // set gravity scale
-                ImGui::InputFloat("Gravity Scale", &m_BodySpecs.GravityScale,0.0, .0f, "%.2f");
+                if (ImGui::TreeNode("Transform"))
+                {
+                    // set scalae
+                    float temp1[2] = { m_BodySpecs.trans.Scale.X, m_BodySpecs.trans.Scale.Y };
+                    ImGui::InputFloat2("Scale ", temp1, "%.3f");
+                    HelpMarker("Circle only uses the scale set on X");
+                    m_BodySpecs.trans.Scale = Physics2D::Vector2(temp1[0], temp1[1]);
+                    // set rotation
+                    ImGui::InputFloat("Rotation", &m_BodySpecs.trans.Rotation);
+                    ImGui::TreePop();
+                }
 
+                if (ImGui::TreeNode("RigidBody"))
+                {
+                    // set kinematic
+                    ImGui::Checkbox("Kinematic", &m_BodySpecs.Kinematic);
+                    // set material
+                    ImGui::InputFloat("Restitution", &m_BodySpecs.Material.Restitution);
+                    ImGui::InputFloat("Density", &m_BodySpecs.Material.Density, 0.1, 1.0f);
+                    // set initial velocity
+                    float temp[2] = { m_BodySpecs.Velocity.X, m_BodySpecs.Velocity.Y };
+                    ImGui::InputFloat2("Initial Velocity", temp, "%.0f");
+                    m_BodySpecs.Velocity = Physics2D::Vector2(temp[0], temp[1]);
+                    // set apply force at start
+                    float temp1[2] = { m_BodySpecs.InitialForce.X, m_BodySpecs.InitialForce.Y };
+                    ImGui::InputFloat2("Initial Force", temp1, "%.0f");
+                    m_BodySpecs.InitialForce = Physics2D::Vector2(temp1[0], temp1[1]);
+                    // set friction
+                    ImGui::InputFloat("Static Friction", &m_BodySpecs.StaticFriction);
+                    ImGui::InputFloat("Dynamic Friction", &m_BodySpecs.DynamicFriction);
+                    // set gravity scale
+                    ImGui::InputFloat("Gravity Scale", &m_BodySpecs.GravityScale, 0.0, .0f, "%.2f");
+
+                    // set apply force at start
+                    ImGui::InputFloat("Initial Torque", &m_BodySpecs.InitialTorque, 0, 0, "%.0f");
+                    ImGui::TreePop();
+                }
                 if (ImGui::TreeNode("Shape"))
                 {
                     if (ImGui::TreeNode("Box"))

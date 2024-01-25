@@ -1,7 +1,6 @@
 #pragma once
-#include "Entity.h"
+#include "Entities/Entity.h"
 #include "PhysicsWorld.h"
-#include "Circle.h"
 class EntityManager
 {
 public:

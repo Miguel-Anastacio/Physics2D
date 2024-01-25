@@ -58,6 +58,7 @@ namespace Physics2D
 			if (rb != NULL && rb->IsKinematic())
 			{
 				rb->AddForce(m_Gravity * rb->GetGravityScale() * rb->GetMass());
+				
 			}
 		}
 	}
@@ -89,19 +90,19 @@ namespace Physics2D
 		m_BroadphaseCollisions.clear();
 		m_BroadphaseCollisionsVector.clear();
 		QuadTree<CollisionBody*> tree(Vector2(600, 390), 6, 6);
+		if (m_CollisionBodies.size() > 4)
+		{
+			int a = 0;
+		}
 		for (auto& body : m_CollisionBodies)
 		{
 			Aabb boundingBox;
 			if (!body->GetAabb(boundingBox))
 				continue;
 
-			tree.Insert(body.get(), body->GetTransform().Position, boundingBox.HalfSize);
+			tree.Insert(body.get(), body->GetTransform().Position , boundingBox.HalfSize);
 		}
 
-		/*if (m_CollisionBodies.size() > 48)
-		{
-			int a = 0;
-		}*/
 		tree.OperateOnContents([&](std::list<QuadTreeEntry<CollisionBody*>>& data)
 			{
 				CollisionPair pair;
@@ -194,9 +195,12 @@ namespace Physics2D
 			if (rb != NULL && rb->IsKinematic())
 			{
 				rb->SetVelocity(rb->GetVelocity() + rb->GetForce() * rb->GetInvMass() * dt);
+				rb->SetAngularVelocity(rb->GetAngularVelocity() + rb->GetTorque() * rb->GetMassData().InvInertia * dt);
 
 				rb->SetPosition(rb->GetPosition() + rb->GetVelocity() * dt);
 				rb->SetForce(Vector2(0, 0));
+				rb->SetTorque(0);
+				rb->SetRotation(rb->GetRotation() + rb->GetAngularVelocity() * dt);
 			}
 
 

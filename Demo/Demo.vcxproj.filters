@@ -21,16 +21,16 @@
     <ClCompile Include="source\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Entity.cpp">
+    <ClCompile Include="source\Entities\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\EntityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Circle.cpp">
+    <ClCompile Include="source\Entities\Circle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Aabb.cpp">
+    <ClCompile Include="source\Entities\Aabb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Debug\UIPanel.cpp">
@@ -54,21 +54,24 @@
     <ClCompile Include="..\Dependencies\imgui\imgui-SFML\imgui-SFML.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\Entities\Polygon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Entity.h">
+    <ClInclude Include="source\Entities\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\EntityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Circle.h">
+    <ClInclude Include="source\Entities\Circle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Aabb.h">
+    <ClInclude Include="source\Entities\Aabb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Utils.hpp">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Debug\EngineDataUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Entities\Polygon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

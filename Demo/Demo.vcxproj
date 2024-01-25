@@ -117,21 +117,23 @@
     <ClCompile Include="..\Dependencies\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\Dependencies\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\Dependencies\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="source\Entities\Polygon.cpp" />
     <ClCompile Include="source\Debug\EngineDataUI.cpp" />
-    <ClCompile Include="source\Aabb.cpp" />
-    <ClCompile Include="source\Circle.cpp" />
+    <ClCompile Include="source\Entities\Aabb.cpp" />
+    <ClCompile Include="source\Entities\Circle.cpp" />
     <ClCompile Include="source\Debug\UIPanel.cpp" />
-    <ClCompile Include="source\Entity.cpp" />
+    <ClCompile Include="source\Entities\Entity.cpp" />
     <ClCompile Include="source\EntityManager.cpp" />
     <ClCompile Include="source\Application.cpp" />
     <ClCompile Include="source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Entities\Polygon.h" />
     <ClInclude Include="source\Debug\EngineDataUI.h" />
-    <ClInclude Include="source\Aabb.h" />
-    <ClInclude Include="source\Circle.h" />
+    <ClInclude Include="source\Entities\Aabb.h" />
+    <ClInclude Include="source\Entities\Circle.h" />
     <ClInclude Include="source\Debug\UIPanel.h" />
-    <ClInclude Include="source\Entity.h" />
+    <ClInclude Include="source\Entities\Entity.h" />
     <ClInclude Include="source\EntityManager.h" />
     <ClInclude Include="source\Application.h" />
     <ClInclude Include="source\Utils.hpp" />

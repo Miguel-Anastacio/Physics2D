@@ -98,7 +98,7 @@
     <ClInclude Include="source\Collision\ManifoldGeneration.h" />
     <ClInclude Include="source\Collision\Manifold.h" />
     <ClInclude Include="source\Dynamics\Rigidbody.h" />
-    <ClInclude Include="source\Collision\Colliders\BoxCollider.h" />
+    <ClInclude Include="source\Collision\Colliders\PolygonCollider.h" />
     <ClInclude Include="source\Collision\Colliders\CircleCollider.h" />
     <ClInclude Include="source\Collision\Colliders\Collider.h" />
     <ClInclude Include="source\PhysicsWorld.h" />
@@ -114,7 +114,7 @@
     <ClCompile Include="source\Collision\ManifoldGeneration.cpp" />
     <ClCompile Include="source\Collision\Manifold.cpp" />
     <ClCompile Include="source\Dynamics\Rigidbody.cpp" />
-    <ClCompile Include="source\Collision\Colliders\BoxCollider.cpp" />
+    <ClCompile Include="source\Collision\Colliders\PolygonCollider.cpp" />
     <ClCompile Include="source\Collision\Colliders\CircleCollider.cpp" />
     <ClCompile Include="source\Collision\Colliders\Collider.cpp" />
     <ClCompile Include="source\PhysicsWorld.cpp" />

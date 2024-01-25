@@ -1,5 +1,5 @@
 #include "ManifoldGeneration.h"
-#include "Colliders/BoxCollider.h"
+#include "Colliders/PolygonCollider.h"
 #include "Colliders/CircleCollider.h"
 #include "Colliders/AabbCollider.h"
 #include <algorithm>
@@ -9,8 +9,8 @@ namespace Physics2D
 	{
 		Manifold FindCircleCircleManifold(const Transform& transformA, const CircleCollider* circleA, const Transform& transformB, const CircleCollider* circleB)
 		{
-			Vector2 centreA = transformA.Position + circleA->m_Center;
-			Vector2 centreB = transformB.Position + circleB->m_Center;
+			Vector2 centreA = transformA.Position;
+			Vector2 centreB = transformB.Position;
 
 			float radiusA = circleA->m_Radius * transformA.Scale.X;
 			float radiusB = circleB->m_Radius * transformB.Scale.X;
@@ -38,7 +38,7 @@ namespace Physics2D
 			return Manifold(aPos, bPos, norm, collisionPointsDistance.Magnitude());
 
 		}
-		Manifold FindCircleBoxManifold(const Transform& circleTransform, const CircleCollider* circle, const Transform& boxTransform, const BoxCollider* box)
+		Manifold FindCirclePolygonManifold(const Transform& circleTransform, const CircleCollider* circle, const Transform& boxTransform, const PolygonCollider* box)
 		{
 			// to do
 			return Manifold();
@@ -49,8 +49,8 @@ namespace Physics2D
 		}
 		Manifold FindAabbAabbManifold(const Transform& transformA, const AabbCollider* boxA, const Transform& transformB, const AabbCollider* boxB)
 		{
-			Vector2 centreA = transformA.Position + boxA->m_Center;
-			Vector2 centreB = transformB.Position + boxB->m_Center;
+			Vector2 centreA = transformA.Position;
+			Vector2 centreB = transformB.Position;
 
 			Vector2 halfSizeA = Vector2(boxA->m_HalfWidth * transformA.Scale.X, boxA->m_HalfHeight * transformA.Scale.Y);
 			Vector2 halfSizeB = Vector2(boxB->m_HalfWidth * transformB.Scale.X, boxB->m_HalfHeight * transformB.Scale.Y);
@@ -162,16 +162,16 @@ namespace Physics2D
 			//	collision.Depth = (xDepth > yDepth) ? xDepth : yDepth;
 			//}
 		}
-		Manifold FindAabbBoxManifold(const Transform& aabbTransform, const AabbCollider* aabb, const Transform& boxTransform, const BoxCollider* box)
+		Manifold FindAabbPolygonManifold(const Transform& aabbTransform, const AabbCollider* aabb, const Transform& boxTransform, const PolygonCollider* box)
 		{
 			// to to
 			return Manifold();
 		}
 		Manifold FindAabbCircleManifold(const Transform& aabbTransform, const AabbCollider* aabb, const Transform& circleTransform, const CircleCollider* circle)
 		{
-			Vector2 centreCircle = circleTransform.Position + circle->m_Center;
+			Vector2 centreCircle = circleTransform.Position;
 			float radius = circleTransform.Scale.X * circle->m_Radius;
-			Vector2 centreBox = aabbTransform.Position + aabb->m_Center;
+			Vector2 centreBox = aabbTransform.Position;
 			Vector2 halfSizeBox = Vector2(aabb->m_HalfWidth * aabbTransform.Scale.X, aabb->m_HalfHeight * aabbTransform.Scale.Y);
 
 			Vector2 boxToCircle = centreCircle - centreBox;
@@ -234,10 +234,153 @@ namespace Physics2D
 
 			
 		}
-		Manifold FindBoxBoxManifold(const Transform& transformA, const BoxCollider* boxA, const Transform& transformB, const BoxCollider* boxB)
+		Manifold FindPolygonPolygonManifold(const Transform& transformA, const PolygonCollider* boxA, const Transform& transformB, const PolygonCollider* boxB)
 		{
 			// to do
+			//	GJK(boxA, boxB, transformA, transformB);
 			return Manifold();
+		}
+		Vector2 GetSupport(const Collider& colliderA, const Collider& colliderB, const Transform& tA, const Transform& tB, Vector2 direction)
+		{
+			//return colliderA.FindFurthestPoint(direction, tA) - colliderB.FindFurthestPoint(direction, tB);
+		}
+		/*int Support(const PolygonCollider& collider, Vector2 dir)
+		{
+			int index = 0;
+			std::vector<Vector2> vertices = collider.GetTransformedVertices();
+			float maxValue = dir.Dot(vertices[index]);
+			for (int i = 1; i < vertices.size(); i++)
+			{
+				float value = dir.Dot(vertices[i]);
+
+				if (value > maxValue)
+				{
+					index = i;
+					maxValue = value;
+				}
+			}
+			return index;
+
+		}*/
+		bool GJK(const Collider& colliderA, const Collider& colliderB, const Transform& tA, const Transform& tB)
+		{
+			// get initial support point in any direction
+			Vector2 support = GetSupport(colliderA, colliderB, tA, tB, Vector2(1, 0));
+
+			// add initial support to a simplex
+			Simplex points;
+			points.PushFront(support);
+			// set the search direction towards the origin
+			Vector2 direction = support * -1;
+
+			while (true)
+			{
+				support = GetSupport(colliderA, colliderB, tA, tB, direction);
+
+				if (support.Dot(direction) <= 0)
+				{
+					// no collision
+					return false;
+				}
+
+				if (NextSimplex(points, direction))
+					return true;
+			}
+			return false;
+		}
+		bool NextSimplex(Simplex& points, Vector2& direction)
+		{
+			switch (points.Size)
+			{
+			case 2: 
+				return Line(points, direction);
+			case 3: 
+				return Triangle(points, direction);
+			default:
+				return false;
+			
+			}
+		}
+		bool Line(Simplex& points, Vector2& direction)
+		{
+			Vector2 a = points.Points[0];
+			Vector2 b = points.Points[1];
+
+			Vector2 ab = Vector2::Normalized(b - a);
+			Vector2 atoOrigin = Vector2::Normalized(Vector2(0, 0) - a);
+
+			if (SameDirection(ab, atoOrigin))
+			{
+				/*Vector2 cross = ab
+				direction = */
+				direction = Vector2::TripleProduct(ab, atoOrigin, ab);
+			}
+			else
+			{
+				points = { a };
+				direction = atoOrigin;
+			}
+
+			return false;
+		}
+		bool Triangle(Simplex& points, Vector2& direction)
+		{
+			/*		B
+				   / \ 		Q
+				  /   \
+				 /     \
+				A ----- C
+			*/
+			// A B C 
+			const Vector2 a = points[0];
+			const Vector2 b = points[1];
+			const Vector2 c = points[2];
+			// compute 
+			Vector2 ab = Vector2::Normalized(b - a);
+			Vector2 ac = Vector2::Normalized(c - a);
+			Vector2 aO = Vector2::Normalized(a*-1);
+
+			Vector2 abf = Vector2::TripleProduct(ac, ab, ab);
+			Vector2 acf = Vector2::TripleProduct(ab, ac, ac);
+
+
+			if (SameDirection(abf, aO))
+			{
+				direction = abf;
+				return false;
+			}
+			if (SameDirection(acf, aO))
+			{
+				direction = acf;
+				return false;
+			}
+
+			return true;
+		}
+		float FindAxisLeastPenetration(int& index, const PolygonCollider& polygonA, const PolygonCollider& polygonB)
+		{
+			float bestDistance = -FLT_MAX;
+			int bestIndex = 0;
+
+			for (int i =0; i < polygonA.GetTransformedVertices().size(); i++)
+			{
+				// retrieve a face normal from A
+				Vector2 normal = polygonA.GetEdges()[i].normal;
+				// retrieve Support point from B along -normal
+				Vector2 support = polygonB.FindFurthestPoint(normal * -1);
+				//retrieve vertex on face from A, transform into B's model space
+				Vector2 v = polygonA.GetTransformedVertices()[i];
+
+				float penetrationDistance = normal.Dot(support - v);
+				if (penetrationDistance > bestDistance)
+				{
+					bestDistance = penetrationDistance;
+					bestIndex = i;
+				}
+
+			}
+			index = bestIndex;
+			return bestDistance;
 		}
 	}
 

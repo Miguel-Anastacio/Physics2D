@@ -31,6 +31,9 @@ namespace Physics2D
 		{
 			SetMass(0);
 		}
+		m_Transform.Scale = init.trans.Scale;
+		m_Transform.Rotation = init.trans.Rotation;
+		SetTorque(init.InitialTorque);
 	}
 
 	void Rigidbody::SetForce(const Vector2& force)
@@ -105,7 +108,10 @@ namespace Physics2D
 	void Rigidbody::SetMaterial(const Material& mat)
 	{
 		m_Material = mat;
-		m_MassData.Mass = m_Material.Density / m_ColliderShared.get()->CalculateArea(m_Transform);
+		if (m_ColliderShared.get()->CalculateArea(m_Transform) == 0)
+			m_MassData.Mass = 1;
+		else
+			m_MassData.Mass = m_Material.Density / m_ColliderShared.get()->CalculateArea(m_Transform);
 		m_MassData.InvMass = 1 / m_MassData.Mass;
 	}
 

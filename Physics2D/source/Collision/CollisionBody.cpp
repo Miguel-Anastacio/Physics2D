@@ -42,6 +42,7 @@ namespace Physics2D
 	}
 	Vector2 CollisionBody::GetPosition() const
 	{
+		//Vector2 center = Vector2(m_ColliderShared->m_Center.Y * m_Transform.Scale.X, m_ColliderShared->m_Center.Y * m_Transform.Scale.Y);
 		return m_Transform.Position;
 	}
 	void CollisionBody::SetID(int id)

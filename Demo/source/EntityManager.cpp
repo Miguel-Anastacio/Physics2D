@@ -1,5 +1,4 @@
 #include "EntityManager.h"
-#include "Circle.h"
 EntityManager::EntityManager()
 {
 

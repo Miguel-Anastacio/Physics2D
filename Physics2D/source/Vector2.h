@@ -85,7 +85,14 @@ namespace Physics2D
 			*this = *this / mag;
 		}
 
-		float Dot(const Vector2& other)
+		static Vector2 Normalized(Vector2 vector) 
+		{
+			float mag = vector.Magnitude();
+			if (mag == 0)
+				mag = 1.0f;
+			return vector / mag;
+		}
+		float Dot(const Vector2& other) const
 		{
 			return X * other.X + Y * other.Y;
 		}
@@ -95,6 +102,37 @@ namespace Physics2D
 			std::cout << "(" << X << "," << Y << ")";
 		}
 
+		Vector2 Scale(const Vector2& scale) const
+		{
+			return Vector2( X * scale.X, Y * scale.Y);
+		}
+
+		float Cross(Vector2 other) const
+		{
+			return (X * other.Y) - (Y * other.X);
+		}
+
+		static Vector2 TripleProduct(Vector2 a, Vector2 b, Vector2 c)
+		{
+			return Vector2(a.Y * (b.Cross(c)), a.X * (c.Cross(b)));
+		}
+	};
+
+	struct Matrix2x2
+	{
+		union 
+		{
+			struct
+			{
+				float m00, m01;
+				float m10, m11;
+			};
+			struct 
+			{
+				Vector2 xCol;
+				Vector2 yCol;
+			};
+		};
 	};
 
 	/*Vector2 operator*(const float& scalar, const Vector2& vector)

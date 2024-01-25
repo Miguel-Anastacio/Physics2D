@@ -28,6 +28,7 @@ std::shared_ptr<Physics2D::Rigidbody> Entity::GetRigidbody() const
 
 void Entity::Update(float dt)
 {
+	setRotation(m_Rigidbody->GetRotation());
 	setPosition(m_Rigidbody->GetPosition().X, m_Rigidbody->GetPosition().Y);
 }
 

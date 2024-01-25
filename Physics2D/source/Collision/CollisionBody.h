@@ -14,10 +14,15 @@ namespace Physics2D
 		std::shared_ptr<Collider> GetColliderShared() const;
 		void SetColliderShared(std::shared_ptr<Collider> collider);
 		Transform GetTransform() const;
+		inline void SetTransform(Transform t) { m_Transform = t; };
 
 		void SetTransform(const Transform& trans);
 		void SetPosition(const Vector2& pos);
 		Vector2 GetPosition() const;
+
+		inline float GetRotation() const { return m_Transform.Rotation; };
+		inline void SetRotation(float rot){ m_Transform.Rotation = rot; };
+
 
 		void SetID(int id);
 		uint64_t GetID();

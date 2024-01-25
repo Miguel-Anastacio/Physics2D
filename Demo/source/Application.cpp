@@ -1,11 +1,12 @@
 #include "Application.h"
-#include "Circle.h"
-#include "Aabb.h"
+#include "Entities/Circle.h"
+#include "Entities/Aabb.h"
+#include "Entities/Polygon.h"
 #include "imgui-SFML/imgui-SFML.h"
 
 Application::Application()
     : m_Window( 
-        sf::VideoMode(1200, 780),
+        sf::VideoMode(1400, 980),
         "WINDOW_NAME",
         sf::Style::Default,
         sf::ContextSettings(0, 0, 8)
@@ -14,7 +15,7 @@ Application::Application()
     //InitGLFW();
     //// Initialize GLEW (must be done after an OpenGL context is created)
     //glewInit();
-    m_EnityManager = new EntityManager(1200, 780);
+    m_EnityManager = new EntityManager(1400, 980);
     
     if (m_Font.loadFromFile("fonts/Roboto-Bold.ttf"))
     {
@@ -94,7 +95,7 @@ void Application::Run()
     //m_Window.setFramerateLimit(60.0f);
     sf::Clock clock;
     // Create Some Static Objects
-    Aabb Floor(sf::Vector2f(100, 500), Physics2D::Vector2(400, 50));
+    Aabb Floor(sf::Vector2f(500, 500), Physics2D::Vector2(400, 50));
     Floor.GetRigidbody()->SetIsKinematic(false);
     Floor.GetShape()->setFillColor(sf::Color::Red);
     Floor.GetShape()->setOutlineColor(sf::Color::White);
@@ -133,7 +134,7 @@ void Application::Run()
                         /* m_EnityManager->AddEntity(Circle(positionFloat, 50.0f));
                          m_World.m_CollisionBodiesVector.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());*/
 
-                        for (int i = 0; i < 20; i++)
+                        for (int i = 0; i < 1; i++)
                         {                        
                             //m_EnityManager->AddEntity(Circle(positionFloat, 10.0f));
                             m_EnityManager->AddEntity(Circle(positionFloat,m_EngineData->GetBodyRadius(), m_EngineData->GetBodySpecs(), m_EngineData->GetCircleColor()));
@@ -146,11 +147,27 @@ void Application::Run()
                          //m_EnityManager->AddEntity(Aabb(positionFloat, Physics2D::Vector2(25, 25)));
                          //m_EnityManager->AddEntity(Aabb(positionFloat, m_EngineData->GetBodySize(), m_EngineData->GetBodySpecs()));
                          m_EnityManager->AddEntity(Aabb(positionFloat, m_EngineData->GetBodySize(), m_EngineData->GetBodySpecs(), m_EngineData->GetAabbColor()));
+                         //m_EnityManager->AddEntity(Polygon(positionFloat, m_EngineData->GetBodySpecs(), m_EngineData->GetAabbColor(), 5));
                          m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
 
                     }
                 }
                     //m_EnityManager
+            }
+            else if(event.type == sf::Event::KeyPressed)
+            {
+                if (event.key.code == sf::Keyboard::Delete)
+                {
+                    m_EnityManager->m_Entities.clear();
+                    m_World.m_CollisionBodies.clear();
+
+                    // add floor
+                    m_EnityManager->AddEntity(Floor);
+                    //m_EnityManager->m_Entities.push_back(Aabb(sf::Vector2f(100, 500), Physics2D::Vector2(400, 50)));
+                    m_World.m_CollisionBodies.emplace_back(m_EnityManager->GetEntities().back().GetRigidbody());
+
+                }
+
             }
         }
 

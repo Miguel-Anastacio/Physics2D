@@ -27,7 +27,7 @@
     <ClInclude Include="source\Collision\Colliders\CircleCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Collision\Colliders\BoxCollider.h">
+    <ClInclude Include="source\Collision\Colliders\PolygonCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Dynamics\Rigidbody.h">
@@ -77,7 +77,7 @@
     <ClCompile Include="source\Collision\Colliders\CircleCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Collision\Colliders\BoxCollider.cpp">
+    <ClCompile Include="source\Collision\Colliders\PolygonCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Dynamics\Rigidbody.cpp">
